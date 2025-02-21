@@ -146,12 +146,12 @@ showShopTutorial(playerId: PlayerId): void
 getShieldAmount(entityId: EntityId): number
 
 /**
- * Set the current shield of an entity.
+ * Set the current shield of a lifeform.
  *
- * @param entityId
+ * @param lifeformId
  * @param newShieldAmount
  */
-setShieldAmount(entityId: EntityId, newShieldAmount: number): void
+setShieldAmount(lifeformId: LifeformId, newShieldAmount: number): void
 
 /**
  * Get the current health of an entity.
@@ -308,10 +308,10 @@ sendFlyingMiddleMessage(playerId: PlayerId, message: CustomTextStyling, distance
 playParticleEffect(opts: TempParticleSystemOpts, clientPredictedBy: PlayerId = null): void
 
 /**
- * Get the in game name of a player.
- * @param playerId
+ * Get the in game name of an entity.
+ * @param entityId
  */
-getPlayerName(playerId: PlayerId): string
+getEntityName(entityId: EntityId): string
 
 /**
  * Given the name of a player, get their id
@@ -346,6 +346,15 @@ kickPlayer(playerId: PlayerId, reason: string): void
 isBlockInLoadedChunk(x: number, y: number, z: number): boolean
 
 /**
+ * Get the name of a block.
+ * @param x could be an array [x, y, z]. If so, the other params shouldn't be passed.
+ * @param y
+ * @param z
+ * @return blockName - will be a name contained in blockMetadata.ts or 'Air'
+ */
+getBlock(x: number | number[], y?: number, z?: number): BlockName
+
+/**
  * Used to get the block id at a specific position.
  * Intended only for use in hot code paths - default to getBlock for most use cases
  *
@@ -354,6 +363,84 @@ isBlockInLoadedChunk(x: number, y: number, z: number): boolean
  * @param z
  */
 getBlockId(x: number, y: number, z: number): BlockId
+
+/**
+ * Set a block. Valid names are those either contained in blockMetadata.ts or are 'Air'
+ *
+ * This function is optimised for setting broad swathes of blocks. For example, if you have a 50x50x50 area you need to turn to air, it will run performantly if you call this in double nested loops.
+ *
+ * IF you're only changing a few blocks, you want this to be super snappy for players, AND you're calling this outside of your _tick function, you can use api.setOptimisations(false).
+ *
+ * If you want the optimisations for large quantities of blocks later on, then call api.setOptimisations(true) when you're done.
+ *
+ *
+ *
+ * @param x Can be an array
+ * @param y Should be blockname if first param is array
+ * @param z
+ * @param blockName
+ */
+setBlock(x: number | number[], y: number | string, z?: number, blockName?: string): void
+
+/**
+ * Initiate a block change "by the world".
+ * This ends up calling the onWorldChangeBlock and only makes the change if not prevented by game/plugins.
+ * initiatorDbId is null if the change was initiated by the game code.
+ *
+ * @param initiatorDbId
+ * @param x
+ * @param y
+ * @param z
+ * @param blockName
+ *
+ * @returns "preventChange" if the change was prevented, "preventDrop" if the change was allowed but without dropping any items, and undefined if the change was allowed with an item drop
+ */
+attemptWorldChangeBlock(initiatorDbId: PNull<PlayerId>, x: number, y: number, z: number, blockName: BlockName): "preventChange" | "preventDrop" | void
+
+/**
+ * Returns whether a block is solid or not.
+ * E.g. Grass block is solid, while water, ladder and water are not.
+ * Will be true if the block is unloaded.
+ *
+ * @param x
+ * @param y
+ * @param z
+ */
+getBlockSolidity(x: number | number[], y?: number, z?: number): boolean
+
+/**
+ * Helper function that sets all blocks in a rectangle to a specific block.
+ *
+ * @param pos1 array [x, y, z]
+ * @param pos2 array [x, y, z]
+ * @param blockName
+ */
+setBlockRect(pos1: number[], pos2: number[], blockName: BlockName): void
+
+/**
+ * Create walls by providing two opposite corners of the cuboid
+ *
+ *
+ * @param pos1 array [x, y, z]
+ * @param pos2 array [x, y, z]
+ * @param blockName
+ * @param hasFloor
+ * @param hasCeiling
+ */
+setBlockWalls(pos1: number[], pos2: number[], blockName: BlockName, hasFloor = false, hasCeiling = false): void
+
+/**
+ * Only use this instead of getBlock if you REALLY need the performance (i.e. you are iterating over tens of thousands of blocks)
+ * ReturnedObject.blockData is a 32x32x32 ndarray of block ids
+ * (see https://www.npmjs.com/package/ndarray)
+ * Each block id is a 16-bit number
+ * The ndarray should only be read from, writing to it will result in desync between the server and client
+ *
+ * @param pos The returned chunk contains pos
+ * @returns null if the chunk is not loaded in a persisted world. ReturnedObject.blockData is an ndarray that can be accessed
+ * (but modifications have to be saved with resetChunk).
+ */
+getChunk(pos: number[]): PNull<GameChunk>
 
 /**
  * Use this to get a chunk ndarray you can edit and set in resetChunk.
@@ -545,7 +632,7 @@ setCantChangeBlock(playerId: PlayerId, x: number, y: number, z: number): void
  * @param playerId
  * @param blockName
  */
-setCanChangeBlockType(playerId: PlayerId, blockName: string): void
+setCanChangeBlockType(playerId: PlayerId, blockName: BlockName): void
 
 /**
  * Stops a player from Changeing a block type. Valid names are those contained within blockMetadata.ts and 'Air'
@@ -554,7 +641,7 @@ setCanChangeBlockType(playerId: PlayerId, blockName: string): void
  * @param playerId
  * @param blockName
  */
-setCantChangeBlockType(playerId: PlayerId, blockName: string): void
+setCantChangeBlockType(playerId: PlayerId, blockName: BlockName): void
 
 /**
  * Remove any previous can/cant change block type settings for a player
@@ -562,7 +649,7 @@ setCantChangeBlockType(playerId: PlayerId, blockName: string): void
  * @param playerId
  * @param blockName
  */
-resetCanChangeBlockType(playerId: PlayerId, blockName: string): void
+resetCanChangeBlockType(playerId: PlayerId, blockName: BlockName): void
 
 /**
  * Make it so a player can Change blocks within two points. Coordinates are inclusive. E.g. if [0, 0, 0] is pos1
@@ -605,7 +692,7 @@ resetCanChangeBlockRect(playerId: PlayerId, pos1: number[], pos2: number[]): voi
  * @param blockName
  * @param disable If you've enabled a player to walk through a block and want to make the block solid for them again, pass this with true. Otherwise you only need to pass playerId and blockName
  */
-setWalkThroughType(playerId: PlayerId, blockName: string, disable = false): void
+setWalkThroughType(playerId: PlayerId, blockName: BlockName, disable = false): void
 
 /**
  * Allow a player to walk through (or not walk through) voxels that are located within a given rectangle.
@@ -1041,20 +1128,11 @@ getPlayerTargetInfo(playerId: PlayerId): { position: Pos; normal: Pos; adjacent:
 getPlayerFacingInfo(playerId: PlayerId): { camPos: Pos; dir: Pos; angleDir: AngleDir; moveHeading: number }
 
 /**
- * Raycast for a block in the world
+ * Raycast for a block in the world.
+ * Given a position and a direction, find the first block that the "ray" hits.
  *
  * @param fromPos
  * @param dirVec
  */
 raycastForBlock(fromPos: number[], dirVec: number[]): BlockRaycastResult
-
-/**
- * If you use this, you should not directly set the player's speedMultiplier.
- * Allows different items etc to modify the player's speed without interfering with each other
- * Main methods of the Multiplier class: setMultiplierType, removeMultiplier, getMultiplierType.
- * Speed is automatically updated when you call these methods
- *
- * @param playerId
- */
-getSpeedCombinator(playerId: PlayerId): Multiplier
 ```
