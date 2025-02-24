@@ -1,9 +1,22 @@
-# press to code
-You can begin a board with `press to code` to run javascript when you right click it.
+# Code API
+
+You can run javascript when right clicking code blocks and press to code boards.
 This is only available to owners of worlds lobbies.
 The javascript can interact with the Bloxd.io game api.
 
 Please use [our discord](https://discord.gg/vwMp5y25RX) to report any issues you come across or features you'd like to see added.
+
+## Code Blocks
+
+- World owners can find these by searching in the creative menu
+- No need to add `press to code`, this text is only needed for code boards, and will automatically be removed
+- If you want to run code without opening the code editor, you can trigger the code block by right clicking an adjacent `press to code` board instead
+
+## Boards
+
+- You can begin a board with `press to code` to run javascript when you right click it.
+- Normally you can't edit a code board after placing it, but you can currently work around this by putting a space before `press to code`.
+- Boards only allow for a small amount of text, we recommend you use Code Blocks instead, or you can work around this by using multiple boards
 
 ## Notes
 
@@ -11,8 +24,6 @@ Please use [our discord](https://discord.gg/vwMp5y25RX) to report any issues you
 - You can use `api.log` or `console.log` for printing and debugging (they do the same thing).
 - You can use `Date.now()` instead of `api.now()` if you prefer, both return the time in milliseconds.
 - Comments like `/* comment */` work, but comments like `// comment` don't work right now.
-- Normally you can't edit a code board after placing it, but you can currently work around this by putting a space before `press to code`.
-- Boards are very small - alternative places to write code are coming soon, for now you can work around this by using multiple boards.
 
 ## Examples
 
@@ -380,7 +391,7 @@ getBlockId(x: number, y: number, z: number): BlockId
  * @param z
  * @param blockName
  */
-setBlock(x: number | number[], y: number | string, z?: number, blockName?: string): void
+setBlock(x: number | number[], y: number | string, z?: number, blockName?: BlockName): void
 
 /**
  * Initiate a block change "by the world".
@@ -977,6 +988,20 @@ sendOverShopInfo(playerId: PlayerId, info: string | CustomTextStyling): void
 openShop(playerId: PlayerId, toggle = false, forceCategory: string = null): void
 
 /**
+ * Apply an effect to a player.
+ * Can be an inbuilt effect E.g. "Speed" (speed boost), "Damage" (damage boost).
+ * For inbuilt just pass the name of the effect and the functionality is handled in-engine.
+ * For custom effect, you pass customEffectInfo. The icon can be an icon from "IngameIcons.ts" or a bloxd item name.
+ * The custom effect onEndCb is an optional helper within which you can undo the effect you applied.
+ *
+ * @param playerId
+ * @param effectName
+ * @param duration
+ * @param customEffectInfo (onEndCb will not work for press to code boards and code blocks)
+ */
+applyEffect(playerId: PlayerId, effectName: string, duration: number | null, customEffectInfo: { icon?: IngameIconName | ItemName; onEndCb?: () => void; displayName?: string | TranslatedText } & Partial<InbuiltEffectInfo>): void
+
+/**
  * Get all the effects currently applied to a player
  *
  * @param playerId
@@ -1135,4 +1160,109 @@ getPlayerFacingInfo(playerId: PlayerId): { camPos: Pos; dir: Pos; angleDir: Angl
  * @param dirVec
  */
 raycastForBlock(fromPos: number[], dirVec: number[]): BlockRaycastResult
+
+/**
+ * Check whether a player is crouching
+ *
+ * @param playerId
+ */
+isPlayerCrouching(playerId: PlayerId): any
+```
+
+## Glossary of Referenced Types
+
+These 'types' can't be referenced by your code, but they help explain some of the parameters in the API.
+
+```ts
+type CustomTextStyling = (string | EntityName | TranslatedText | StyledIcon | StyledText)[]
+
+type EntityMeshScalingMap = { [key in "TorsoNode" | "HeadMesh" | "ArmRightMesh" | "ArmLeftMesh" | "LegLeftMesh" | "LegRightMesh"]?: number[] }
+
+type EntityName = {
+	entityName: string
+	style?: {
+		color?: string
+		colour?: string
+	}
+}
+
+type IngameIconName = "Damage" | "Damage Reduction" | "Speed" | "VoidJump" | "Fist" | "Frozen" | "Hydrated" | "Invisible" | "Jump Boost" | "Poisoned" | "Slowness" | "Weakness" | "Health Regen" | "Haste" | "Heat Resistance" | "Gliding" | "Boating" | "Obsidian Boating" | "Bunny Hop" | "FallDamage" | "Feather Falling"
+
+enum ParticleSystemBlendMode {
+	// Source color is added to the destination color without alpha affecting the result
+	OneOne = 0,
+	// Blend current color and particle color using particle’s alpha
+	Standard = 1,
+	// Add current color and particle color multiplied by particle’s alpha
+	Add,
+	// Multiply current color with particle color
+	Multiply,
+	// Multiply current color with particle color then add current color and particle color multiplied by particle’s alpha
+	MultiplyAdd,
+}
+
+type RecipesForItem = {
+	requires: { items: string[]; amt: number }[]
+	produces: number
+	station?: string
+}[]
+
+type StyledIcon = {
+	icon: string
+	style?: {
+		color?: string
+		colour?: string
+		fontSize?: string
+		opacity?: number
+	}
+}
+
+type StyledText = {
+	str: string | EntityName | TranslatedText
+	style?: {
+		color?: string
+		colour?: string
+		fontWeight?: string
+		fontSize?: string
+		fontStyle?: string
+		opacity?: number
+	}
+	clickableUrl?: string
+}
+
+type TempParticleSystemOpts = {
+	texture: string
+	minLifeTime: number
+	maxLifeTime: number
+	minEmitPower: number
+	maxEmitPower: number
+	minSize: number
+	maxSize: number
+	gravity: number[]
+	velocityGradients: {
+		timeFraction: number
+		factor: number
+		factor2: number
+	}[]
+	colorGradients: {
+		timeFraction: number
+		minColor: [number, number, number, number]
+		maxColor?: [number, number, number, number]
+	}[] | {
+		color: [number, number, number]
+	}[]
+	blendMode: ParticleSystemBlendMode
+	dir1: number[]
+	dir2: number[]
+	pos1: number[]
+	pos2: number[]
+	manualEmitCount: number
+	hideDist?: number
+}
+
+type TranslatedText = {
+	translationKey: string
+	params?: Record<string, string | number | boolean | EntityName>
+}
+
 ```
