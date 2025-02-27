@@ -27,7 +27,12 @@ Please use [our discord](https://discord.gg/vwMp5y25RX) to report any issues you
 
 ## Examples
 
-Set player health to 99, and then print it:
+Code Block to make the player jump:
+```ts
+f = api.setVelocity(myId, 0, 9, 0)
+```
+
+Board to make the player jump:
 ```ts
  press to code
 s = "setHealth"
@@ -36,42 +41,68 @@ g = "getHealth"
 api[g](myId)
 ```
 
-Make the player jump:
-```ts
- press to code
-s="setVelocity"
-f = api[s]
-f(myId, 0, 9, 0)
-```
-
 Push the player
 ```ts
- press to code
-a = "apply"
-a += "Impulse"
-f = api[a]
-f(myId, 9, 0, 9)
+api.applyImpulse(myId, 9, 0, 9)
 ```
 
-Define a function to get the IDs of players using api.getPlayerIds():
+Send an orange message to yourself:
 ```ts
- press to code
-getIds = () => {
-g="getPlayerIds"
-ids = api[g]()
-return ids
+api.sendMessage(myId, "text", { color: "orange" })
+```
+
+Create flying text:
+```ts
+const speed = 100
+api.sendFlyingMiddleMessage(myId, ["secret"], speed)
+```
+
+Send a message to all players:
+```ts
+api.broadcastMessage("announcement", { color: "red" })
+```
+
+Set player health to 99, and print the old health:
+```ts
+const oldHealth = api.getHealth(myId)
+api.setHealth(myId, 99)
+api.log("Old Health:", 99)
+```
+
+Define a function to get the player IDs excluding your own ID
+```ts
+getOtherIds = () => {
+    const ids = api.getPlayerIds()
+    const otherIds = []
+    for (const id of ids) {
+        if (id !== myId) {
+            otherIds.push(id)
+        }
+    }
+    return otherIds
 }
 ```
 
-Use the function above to get IDs excluding your own ID:
+Use the function above to make other players look like zombies:
 ```ts
- press to code
-ids = getIds()
-ids.filter(i =>
-{
-const me = myId
-return i !== me
-})
+for (const otherId of getOtherIds()) {
+    api.setPlayerPose(otherId, "zombie")
+    for (const part of ["head", "body", "legs"]) {
+        /* Notice the skin texture uses a capital Z */
+        api.changePlayerIntoSkin(otherId, part, "Zombie")
+    }
+}
+```
+
+Make all players look like floating wizards:
+```ts
+for (const playerId of api.getPlayerIds()) {
+    api.setPlayerPose(playerId, "driving")
+    for (const part of ["head", "body", "legs"]) {
+        /* Notice the skin texture uses a capital W */
+        api.changePlayerIntoSkin(playerId, part, "Wizard")
+    }
+}
 ```
 
 ## API
@@ -83,6 +114,15 @@ Global object `api` has the following methods:
  * @param entityId
  */
 getPosition(entityId: EntityId): [number, number, number]
+
+/**
+ * Set position of a player / entity.
+ * @param entityId
+ * @param x Can also be an array, in which case y and z shouldn't be passed
+ * @param y
+ * @param z
+ */
+setPosition(entityId: EntityId, x: number | number[], y?: number, z?: number): void
 
 /**
  * Get all the player ids.
@@ -335,14 +375,14 @@ getPlayerId(playerName: string): PNull<PlayerId>
  *
  * @param playerId
  */
-getPlayerDbId(playerId: PlayerId): string
+getPlayerDbId(playerId: PlayerId): PlayerDbId
 
 /**
  * Returns null if player not in lobby
  *
  * @param dbId
  */
-getPlayerIdFromDbId(dbId: string): PNull<PlayerId>
+getPlayerIdFromDbId(dbId: PlayerDbId): PNull<PlayerId>
 
 
 kickPlayer(playerId: PlayerId, reason: string): void
@@ -391,7 +431,7 @@ getBlockId(x: number, y: number, z: number): BlockId
  * @param z
  * @param blockName
  */
-setBlock(x: number | number[], y: number | string, z?: number, blockName?: BlockName): void
+setBlock(x: number | number[], y: number | BlockName, z?: number, blockName?: BlockName): void
 
 /**
  * Initiate a block change "by the world".
@@ -406,7 +446,7 @@ setBlock(x: number | number[], y: number | string, z?: number, blockName?: Block
  *
  * @returns "preventChange" if the change was prevented, "preventDrop" if the change was allowed but without dropping any items, and undefined if the change was allowed with an item drop
  */
-attemptWorldChangeBlock(initiatorDbId: PNull<PlayerId>, x: number, y: number, z: number, blockName: BlockName): "preventChange" | "preventDrop" | void
+attemptWorldChangeBlock(initiatorDbId: PNull<PlayerDbId>, x: number, y: number, z: number, blockName: BlockName): "preventChange" | "preventDrop" | void
 
 /**
  * Returns whether a block is solid or not.
@@ -804,6 +844,18 @@ getHeldItem(playerId: PlayerId): InvenItem
 getInventoryFreeSlotCount(playerId: PlayerId): number
 
 /**
+ * Checks if a player is able to open a chest at a given location,
+ * as per the rules laid out by the "onPlayerAttemptOpenChest" game callback.
+ * Returns true if the player can open the chest, false if they cannot, and void if the chest does not exist.
+ *
+ * @param playerId
+ * @param chestX
+ * @param chestY
+ * @param chestZ
+ */
+canOpenStandardChest(playerId: PlayerId, chestX: number, chestY: number, chestZ: number): boolean | void
+
+/**
  * Get the amount of free slots in a standard chest
  *
  * @param chestPos
@@ -1022,7 +1074,7 @@ removeEffect(playerId: PlayerId, name: string): void
  * @param partType
  * @param selected
  */
-changePlayerIntoSkin(playerId: PlayerId, partType: string, selected: string): void
+changePlayerIntoSkin(playerId: PlayerId, partType: CustomisationPart, selected: string): void
 
 /**
  * Remove gamemode-applied skin from a player
