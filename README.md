@@ -639,7 +639,7 @@ setPlayerOpacity(playerId: PlayerId, opacity: number): void
 setPlayerOpacityForOnePlayer(playerIdWhoViewsOpacityPlayer: PlayerId, playerIdOfOpacityPlayer: PlayerId, opacity: number): void
 
 /**
- * Obtain Date.now() value saved at start of tick
+ * Obtain Date.now() value saved at start of current game tick
  */
 now(): number
 
@@ -762,10 +762,33 @@ setWalkThroughType(playerId: PlayerId, blockName: BlockName, disable = false): v
 setWalkThroughRect(playerId: PlayerId, pos1: number[], pos2: number[], updateType: WalkThroughType): void
 
 /**
+ * Give a player an item and a certain amount of that item.
+ * Returns the amount of item added to the users inventory.
+ *
+ * @param playerId
+ * @param itemName
+ * @param itemAmount
+ * @param attributes An optional object for certain types of item. For guns this can contain the shotsLeft field which is the amount of ammo the gun currently has.
+ */
+giveItem(playerId: PlayerId, itemName: string, itemAmount?: number, attributes?: ItemAttributes): number
+
+/**
  * Whether the player has space in their inventory to get new blocks
  * @param playerId
  */
 inventoryIsFull(playerId: PlayerId): boolean
+
+/**
+ * Put an item in a specific index. Default hotbar is indexes 0-9
+ *
+ * @param playerId
+ * @param itemSlotIndex 0-indexed
+ * @param itemName Can be 'Air', in which case itemAmount will be ignored and the slot will be cleared.
+ * @param itemAmount -1 for infinity. Should not be set, or null, for items that are not stackable.
+ * @param attributes An optional object for certain types of item. For guns this can contain the shotsLeft field which is the amount of ammo the gun currently has.
+ * @param tellClient whether to tell client about it - results in desync between client and server if client doesnt locally perform the same action
+ */
+setItemSlot(playerId: PlayerId, itemSlotIndex: number, itemName: string, itemAmount?: PNull<number>, attributes?: ItemAttributes, tellClient = true): void
 
 /**
  * Remove an amount of item from a player's inventory
@@ -857,6 +880,18 @@ getInventoryFreeSlotCount(playerId: PlayerId): number
 canOpenStandardChest(playerId: PlayerId, chestX: number, chestY: number, chestZ: number): boolean | void
 
 /**
+ * Give a standard chest an item and a certain amount of that item.
+ * Returns the amount of item added to the chest.
+ *
+ * @param chestPos
+ * @param itemName
+ * @param itemAmount
+ * @param playerId The player who is interacting with the chest.
+ * @param attributes An optional object for certain types of item. For guns this can contain the shotsLeft field which is the amount of ammo the gun currently has.
+ */
+giveStandardChestItem(chestPos: readonly number[], itemName: string, itemAmount = 1, playerId?: PlayerId, attributes?: ItemAttributes): number
+
+/**
  * Get the amount of free slots in a standard chest
  *
  * @param chestPos
@@ -890,6 +925,17 @@ getStandardChestItemSlot(chestPos: number[], idx: number): InvenItem
 getStandardChestItems(chestPos: number[]): readonly InvenItem[]
 
 /**
+ *
+ * @param chestPos
+ * @param idx 0-indexed
+ * @param itemName Can be 'Air', in which case itemAmount will be ignored and the slot will be cleared.
+ * @param itemAmount -1 for infinity. Should not be set, or null, for items that are not stackable.
+ * @param playerId The player who is interacting with the chest.
+ * @param attributes An optional object for certain types of item. For guns this can contain the shotsLeft field which is the amount of ammo the gun currently has.
+ */
+setStandardChestItemSlot(chestPos: readonly number[], idx: number, itemName: string, itemAmount: number = null, playerId?: PlayerId, attributes?: ItemAttributes): void
+
+/**
  * Get the item in a player's moonstone chest slot. Null if empty
  *
  * Moonstone chests are a type of chest where a player accesses the same contents no matter the location of the moonstone chest
@@ -907,6 +953,17 @@ getMoonstoneChestItemSlot(playerId: PlayerId, idx: number): InvenItem
  * @param playerId
  */
 getMoonstoneChestItems(playerId: PlayerId): readonly InvenItem[]
+
+/**
+ * Moonstone chests are a type of chest where a player accesses the same contents no matter the location of the moonstone chest
+ *
+ * @param playerId
+ * @param idx 0-indexed
+ * @param itemName Can be 'Air', in which case itemAmount will be ignored and the slot will be cleared.
+ * @param itemAmount -1 for infinity. Should not be set, or null, for items that are not stackable.
+ * @param metadata An optional object for certain types of item. For guns this can contain the shotsLeft field which is the amount of ammo the gun currently has.
+ */
+setMoonstoneChestItemSlot(playerId: PlayerId, idx: number, itemName: string, itemAmount: number = null, metadata?: ItemAttributes): void
 
 /**
  * Get the name of the lobby this game is running in.
@@ -1317,5 +1374,7 @@ type TranslatedText = {
 	translationKey: string
 	params?: Record<string, string | number | boolean | EntityName>
 }
+
+type ItemAttributes = { customDisplayName?: string; customDescription?: string; customAttributes?: Record<string, any> }
 
 ```

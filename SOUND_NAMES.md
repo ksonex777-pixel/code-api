@@ -1,4 +1,4 @@
-# Sound names
+# Sound Names
 
 - These are the strings you can give to functions that take a `soundName` as input
 - If you want a random similar sound then you can remove the number from the sound name of your choice
