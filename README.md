@@ -33,15 +33,6 @@ Code Block to make the player jump:
 f = api.setVelocity(myId, 0, 9, 0)
 ```
 
-Board to make the player jump:
-```ts
- press to code
-s = "setHealth"
-api[s](myId, 99)
-g = "getHealth"
-api[g](myId)
-```
-
 Push the player
 ```ts
 api.applyImpulse(myId, 9, 0, 9)
@@ -67,7 +58,7 @@ Set player health to 99, and print the old health:
 ```ts
 const oldHealth = api.getHealth(myId)
 api.setHealth(myId, 99)
-api.log("Old Health:", 99)
+api.log("Old Health:", oldHealth)
 ```
 
 Define a function to get the player IDs excluding your own ID

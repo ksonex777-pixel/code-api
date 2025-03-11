@@ -19,6 +19,10 @@
 `cannonFire2`
 `cannonFire3`
 `cashRegister`
+`caveGolem1`
+`caveGolem2`
+`caveGolem3`
+`caveGolem4`
 `chestClose`
 `chestOpen`
 `cloth1`
