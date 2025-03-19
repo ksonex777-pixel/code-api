@@ -29,39 +29,46 @@ Please use [our discord](https://discord.gg/vwMp5y25RX) to report any issues you
 ## Examples
 
 Code Block to make the player jump:
+
 ```ts
 f = api.setVelocity(myId, 0, 9, 0)
 ```
 
 Push the player
+
 ```ts
 api.applyImpulse(myId, 9, 0, 9)
 ```
 
 Send an orange message to yourself:
+
 ```ts
 api.sendMessage(myId, "text", { color: "orange" })
 ```
 
 Create flying text:
+
 ```ts
 const speed = 100
 api.sendFlyingMiddleMessage(myId, ["secret"], speed)
 ```
 
 Send a message to all players:
+
 ```ts
 api.broadcastMessage("announcement", { color: "red" })
 ```
 
 Set player health to 99, and print the old health:
+
 ```ts
 const oldHealth = api.getHealth(myId)
 api.setHealth(myId, 99)
 api.log("Old Health:", oldHealth)
 ```
 
-Define a function to get the player IDs excluding your own ID
+Define a function to get the player IDs excluding your own ID:
+
 ```ts
 getOtherIds = () => {
     const ids = api.getPlayerIds()
@@ -76,6 +83,7 @@ getOtherIds = () => {
 ```
 
 Use the function above to make other players look like zombies:
+
 ```ts
 for (const otherId of getOtherIds()) {
     api.setPlayerPose(otherId, "zombie")
@@ -87,6 +95,7 @@ for (const otherId of getOtherIds()) {
 ```
 
 Make all players look like floating wizards:
+
 ```ts
 for (const playerId of api.getPlayerIds()) {
     api.setPlayerPose(playerId, "driving")
@@ -100,6 +109,7 @@ for (const playerId of api.getPlayerIds()) {
 ## API
 
 Global object `api` has the following methods:
+
 ```ts
 /**
  * Get position of a player / entity.
@@ -211,7 +221,7 @@ getHealth(entityId: PlayerId): number
  *
  * @return Whether the entity was killed
  */
-applyHealthChange(lifeformId: LifeformId, changeAmount: number, whoDidDamage?: PlayerId | { playerId: PlayerId; withItem: string }, broadcastLifeformHurt = true): boolean
+applyHealthChange(lifeformId: LifeformId, changeAmount: number, whoDidDamage?: LifeformId | { lifeformId: LifeformId; withItem: string }, broadcastLifeformHurt = true): boolean
 
 /**
  * Set the current health of an entity.
@@ -224,7 +234,7 @@ applyHealthChange(lifeformId: LifeformId, changeAmount: number, whoDidDamage?: P
  *
  * @return Whether this change in health killed the player
  */
-setHealth(entityId: EntityId, newHealth: PNull<number>, whoDidDamage?: PlayerId | { playerId: PlayerId; withItem: string }, increaseMaxHealthIfNeeded = false): boolean
+setHealth(entityId: EntityId, newHealth: PNull<number>, whoDidDamage?: LifeformId | { lifeformId: LifeformId; withItem: string }, increaseMaxHealthIfNeeded = false): boolean
 
 /**
  * Make it as if hittingEId hit hitEId
@@ -260,20 +270,20 @@ applyMeleeHit(hittingEId: PlayerId, hitEId: PlayerId, dirFacing: number[], bodyP
  * @returns whether the attack damaged the lifeform
  */
 attemptApplyDamage({
-	eId,
-	hitEId,
-	attemptedDmgAmt,
-	withItem,
-	bodyPartHit = undefined,
-	attackDir = undefined,
-	showCritParticles = false,
-	reduceVerticalKbVelocity = true,
-	broadcastEntityHurt = true,
-	attackCooldownSettings = null,
-	hittingSoundOverride = null,
-	ignoreOtherEntitySettingCanAttack = false,
-	isTrueDamage = false,
-	damagerDbId = null,
+    eId,
+    hitEId,
+    attemptedDmgAmt,
+    withItem,
+    bodyPartHit = undefined,
+    attackDir = undefined,
+    showCritParticles = false,
+    reduceVerticalKbVelocity = true,
+    broadcastEntityHurt = true,
+    attackCooldownSettings = null,
+    hittingSoundOverride = null,
+    ignoreOtherEntitySettingCanAttack = false,
+    isTrueDamage = false,
+    damagerDbId = null,
 }: PlayerAttemptDamageOtherPlayerOpts): boolean
 
 /**
@@ -288,7 +298,7 @@ forceRespawn(playerId: PlayerId, respawnPos?: number[]): void
  * @param lifeformId
  * @param whoKilled Optional
  */
-killLifeform(lifeformId: LifeformId, whoKilled?: PlayerId | { playerId: PlayerId; withItem: string }): void
+killLifeform(lifeformId: LifeformId, whoKilled?: LifeformId | { lifeformId: LifeformId; withItem: string }): void
 
 /**
  * Gets the player's current killstreak
@@ -557,14 +567,14 @@ chunkIdToBotLeftCoord(chunkId: string): [number, number, number]
  * }
  */
 sendTopRightHelper(playerId: PlayerId, icon: string, text: string, opts: {
-		duration?: number
-		width?: number
-		height?: number
-		color?: string
-		iconSizeMult?: number
-		textAndIconColor?: string
-		fontSize?: string
-	}): void
+    duration?: number
+    width?: number
+    height?: number
+    color?: string
+    iconSizeMult?: number
+    textAndIconColor?: string
+    fontSize?: string
+}): void
 
 /**
  * Whether the player is on a mobile device or a computer.
@@ -1209,24 +1219,24 @@ setCameraZoom(playerId: PlayerId, zoom: number): void
  *
  */
 playSound(playerId: PlayerId, soundName: string, volume: number, rate: number, posSettings?: {
-		playerIdOrPos: PlayerId | number[]
-		maxHearDist?: number
-		refDistance?: number
-	}): void
+    playerIdOrPos: PlayerId | number[]
+    maxHearDist?: number
+    refDistance?: number
+}): void
 
 // See documentation for api.playSound
 broadcastSound(soundName: string, volume: number, rate: number, posSettings?: {
-		playerIdOrPos: PlayerId | number[]
-		maxHearDist?: number
-		refDistance?: number
-	}, exceptPlayerId: PlayerId = null): void
+    playerIdOrPos: PlayerId | number[]
+    maxHearDist?: number
+    refDistance?: number
+}, exceptPlayerId: PlayerId = null): void
 
 // See documentation for api.playSound
 playClientPredictedSound(soundName: string, volume: number, rate: number, posSettings?: {
-		playerIdOrPos: PlayerId | number[]
-		maxHearDist?: number
-		refDistance?: number
-	}, predictedBy?: PlayerId): void
+    playerIdOrPos: PlayerId | number[]
+    maxHearDist?: number
+    refDistance?: number
+}, predictedBy?: PlayerId): void
 
 
 calcExplosionForce(eId: EntityId, explosionType: ExplosionType, knockbackFactor: number, explosionRadius: number, explosionPos: number[], ignoreProjectiles: boolean): { force: Pos; forceFrac: number; }
@@ -1280,90 +1290,90 @@ type CustomTextStyling = (string | EntityName | TranslatedText | StyledIcon | St
 type EntityMeshScalingMap = { [key in "TorsoNode" | "HeadMesh" | "ArmRightMesh" | "ArmLeftMesh" | "LegLeftMesh" | "LegRightMesh"]?: number[] }
 
 type EntityName = {
-	entityName: string
-	style?: {
-		color?: string
-		colour?: string
-	}
+    entityName: string
+    style?: {
+        color?: string
+        colour?: string
+    }
 }
 
 type IngameIconName = "Damage" | "Damage Reduction" | "Speed" | "VoidJump" | "Fist" | "Frozen" | "Hydrated" | "Invisible" | "Jump Boost" | "Poisoned" | "Slowness" | "Weakness" | "Health Regen" | "Haste" | "Heat Resistance" | "Gliding" | "Boating" | "Obsidian Boating" | "Bunny Hop" | "FallDamage" | "Feather Falling"
 
 enum ParticleSystemBlendMode {
-	// Source color is added to the destination color without alpha affecting the result
-	OneOne = 0,
-	// Blend current color and particle color using particle’s alpha
-	Standard = 1,
-	// Add current color and particle color multiplied by particle’s alpha
-	Add,
-	// Multiply current color with particle color
-	Multiply,
-	// Multiply current color with particle color then add current color and particle color multiplied by particle’s alpha
-	MultiplyAdd,
+    // Source color is added to the destination color without alpha affecting the result
+    OneOne = 0,
+    // Blend current color and particle color using particle’s alpha
+    Standard = 1,
+    // Add current color and particle color multiplied by particle’s alpha
+    Add,
+    // Multiply current color with particle color
+    Multiply,
+    // Multiply current color with particle color then add current color and particle color multiplied by particle’s alpha
+    MultiplyAdd,
 }
 
 type RecipesForItem = {
-	requires: { items: string[]; amt: number }[]
-	produces: number
-	station?: string
+    requires: { items: string[]; amt: number }[]
+    produces: number
+    station?: string
 }[]
 
 type StyledIcon = {
-	icon: string
-	style?: {
-		color?: string
-		colour?: string
-		fontSize?: string
-		opacity?: number
-	}
+    icon: string
+    style?: {
+        color?: string
+        colour?: string
+        fontSize?: string
+        opacity?: number
+    }
 }
 
 type StyledText = {
-	str: string | EntityName | TranslatedText
-	style?: {
-		color?: string
-		colour?: string
-		fontWeight?: string
-		fontSize?: string
-		fontStyle?: string
-		opacity?: number
-	}
-	clickableUrl?: string
+    str: string | EntityName | TranslatedText
+    style?: {
+        color?: string
+        colour?: string
+        fontWeight?: string
+        fontSize?: string
+        fontStyle?: string
+        opacity?: number
+    }
+    clickableUrl?: string
 }
 
 type TempParticleSystemOpts = {
-	texture: string
-	minLifeTime: number
-	maxLifeTime: number
-	minEmitPower: number
-	maxEmitPower: number
-	minSize: number
-	maxSize: number
-	gravity: number[]
-	velocityGradients: {
-		timeFraction: number
-		factor: number
-		factor2: number
-	}[]
-	colorGradients: {
-		timeFraction: number
-		minColor: [number, number, number, number]
-		maxColor?: [number, number, number, number]
-	}[] | {
-		color: [number, number, number]
-	}[]
-	blendMode: ParticleSystemBlendMode
-	dir1: number[]
-	dir2: number[]
-	pos1: number[]
-	pos2: number[]
-	manualEmitCount: number
-	hideDist?: number
+    texture: string
+    minLifeTime: number
+    maxLifeTime: number
+    minEmitPower: number
+    maxEmitPower: number
+    minSize: number
+    maxSize: number
+    gravity: number[]
+    velocityGradients: {
+        timeFraction: number
+        factor: number
+        factor2: number
+    }[]
+    colorGradients: {
+        timeFraction: number
+        minColor: [number, number, number, number]
+        maxColor?: [number, number, number, number]
+    }[] | {
+        color: [number, number, number]
+    }[]
+    blendMode: ParticleSystemBlendMode
+    dir1: number[]
+    dir2: number[]
+    pos1: number[]
+    pos2: number[]
+    manualEmitCount: number
+    hideDist?: number
 }
 
 type TranslatedText = {
-	translationKey: string
-	params?: Record<string, string | number | boolean | EntityName>
+    translationKey: string
+    params?: Record<string, string | number | boolean | EntityName>
 }
 
 type ItemAttributes = { customDisplayName?: string; customDescription?: string; customAttributes?: Record<string, any> }
