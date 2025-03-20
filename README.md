@@ -591,6 +591,13 @@ isMobile(playerId: PlayerId): boolean
 setCantPickUpItem(playerId: PlayerId, itemId: EntityId): void
 
 /**
+ * Delete an item drop by item drop entity ID
+ *
+ * @param itemId
+ */
+deleteItemDrop(itemId: EntityId): void
+
+/**
  * Get the metadata about a block or item before stats have been modified by any client options
  * (i.e. its entry in either blockMetadata.ts or nonBlockMetadata in itemMetadata.ts)
  *
