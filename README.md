@@ -1001,7 +1001,7 @@ getLobbyType(): LobbyType
 progressBarUpdate(playerId: PlayerId, toFraction: number, toDuration = 200): void
 
 /**
- * Edit the crafting recipes for a player. See crafting.ts for the format of recipesForItem
+ * Edit the crafting recipes for a player
  *
  * @param playerId
  * @param itemName
@@ -1041,6 +1041,44 @@ getEntitiesInRect(minCoords: number[], maxCoords: number[]): EntityId[]
  * @param entityId
  */
 getEntityType(entityId: EntityId): EntityType
+
+/**
+ * Create a mob herd. A mob herd represents a collection of mobs that move together.
+ */
+createMobHerd(): MobHerdId
+
+/**
+ * Try to spawn a mob into the world at a given position. Returns null on failure.
+ * WARNING: Either the "onPlayerAttemptSpawnMob" or the "onWorldAttemptSpawnMob" game callback will be called
+ * depending on whether "spawnerId" is provided. Calling this function inside those callbacks risks infinite recursion.
+ * @param mobType
+ * @param x
+ * @param y
+ * @param z
+ * @param opts Includes:
+ *  - mobHerdId The ID of this mob's herd. (A mob herd represents a collection of mobs that move together.)
+ *  - spawnerId The ID of the player who tried to spawn this mob.
+ *  - name If set, gives the mob a name that will be displayed as a nametag above their head.
+ *  - playSoundOnSpawn
+ *  - variation
+ */
+attemptSpawnMob<TMobType extends MobType>(mobType: TMobType, x: number, y: number, z: number, opts?: Partial<{ mobHerdId: MobHerdId; spawnerId: PlayerId; name: string; playSoundOnSpawn: boolean; variation: MobVariation<TMobType> }>): PNull<MobId>
+
+/**
+ * Dispose of a mob's state and remove them from the world without triggering "on death" flows.
+ * @param mobId
+ */
+despawnMob(mobId: MobId): void
+
+/**
+ * Get the number of mobs in the world.
+ */
+getNumMobs(): number
+
+/**
+ * Get the mob IDs of all mobs in the world.
+ */
+getMobIds(): MobId[]
 
 /**
  * Apply an impulse to an entity
@@ -1322,7 +1360,7 @@ enum ParticleSystemBlendMode {
 type RecipesForItem = {
     requires: { items: string[]; amt: number }[]
     produces: number
-    station?: string
+    station?: string | string[]
 }[]
 
 type StyledIcon = {
