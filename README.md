@@ -306,7 +306,7 @@ killLifeform(lifeformId: LifeformId, whoKilled?: LifeformId | { lifeformId: Life
  * @param playerId
  * @returns
  */
-getCurrentKillstreak(playerId: PlayerId): any
+getCurrentKillstreak(playerId: PlayerId): number
 
 /**
  * Clears the player's current killstreak
@@ -856,7 +856,7 @@ setSelectedInventorySlotI(playerId: PlayerId, newI: number): void
  * @param playerId
  * @returns
  */
-getSelectedInventorySlotI(playerId: PlayerId): any
+getSelectedInventorySlotI(playerId: PlayerId): number
 
 /**
  * Get the currently held item of a player
@@ -865,7 +865,7 @@ getSelectedInventorySlotI(playerId: PlayerId): any
  *
  * @param playerId
  */
-getHeldItem(playerId: PlayerId): InvenItem
+getHeldItem(playerId: PlayerId): PNull<InvenItem>
 
 /**
  * Get the amount of free slots in a player's inventory.
@@ -885,7 +885,7 @@ getInventoryFreeSlotCount(playerId: PlayerId): number
  * @param chestY
  * @param chestZ
  */
-canOpenStandardChest(playerId: PlayerId, chestX: number, chestY: number, chestZ: number): boolean | void
+canOpenStandardChest(playerId: PlayerId, chestX: number, chestY: number, chestZ: number): PNull<boolean>
 
 /**
  * Give a standard chest an item and a certain amount of that item.
@@ -923,14 +923,14 @@ getStandardChestItemAmount(chestPos: number[], itemName: string): number
  * @param chestPos
  * @param idx
  */
-getStandardChestItemSlot(chestPos: number[], idx: number): InvenItem
+getStandardChestItemSlot(chestPos: number[], idx: number): PNull<InvenItem>
 
 /**
  * Get all the items from a standard chest in order. Use this instead of repetitive calls to getStandardChestItemSlot
  *
  * @param chestPos
  */
-getStandardChestItems(chestPos: number[]): readonly InvenItem[]
+getStandardChestItems(chestPos: number[]): readonly PNull<InvenItem>[]
 
 /**
  *
@@ -951,7 +951,7 @@ setStandardChestItemSlot(chestPos: readonly number[], idx: number, itemName: str
  * @param playerId
  * @param idx
  */
-getMoonstoneChestItemSlot(playerId: PlayerId, idx: number): InvenItem
+getMoonstoneChestItemSlot(playerId: PlayerId, idx: number): PNull<InvenItem>
 
 /**
  * Get all the items from a moonstone chest in order. Use this instead of repetitive calls to getMoonstoneChestItemSlot
@@ -960,7 +960,7 @@ getMoonstoneChestItemSlot(playerId: PlayerId, idx: number): InvenItem
  *
  * @param playerId
  */
-getMoonstoneChestItems(playerId: PlayerId): readonly InvenItem[]
+getMoonstoneChestItems(playerId: PlayerId): readonly PNull<InvenItem>[]
 
 /**
  * Moonstone chests are a type of chest where a player accesses the same contents no matter the location of the moonstone chest
@@ -976,7 +976,7 @@ setMoonstoneChestItemSlot(playerId: PlayerId, idx: number, itemName: string, ite
 /**
  * Get the name of the lobby this game is running in.
  */
-getLobbyName(): any
+getLobbyName(): PNull<string>
 
 /**
  * Integer lobby names are public
@@ -1322,7 +1322,7 @@ raycastForBlock(fromPos: number[], dirVec: number[]): BlockRaycastResult
  *
  * @param playerId
  */
-isPlayerCrouching(playerId: PlayerId): any
+isPlayerCrouching(playerId: PlayerId): boolean
 ```
 
 ## Glossary of Referenced Types

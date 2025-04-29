@@ -5,26 +5,25 @@ Players can use World Code in custom worlds get functions they've written to run
 ```text
 tick onClose onPlayerJoin onPlayerLeave onPlayerJump onRespawnRequest
 playerCommand onPlayerChat onPlayerChangeBlock onPlayerDropItem
-onPlayerPickedUpItem onPlayerSelectInventorySlot onBlockStand onPlayerCraft
-onPlayerAttemptOpenChest onPlayerOpenedChest onPlayerMoveItemOutOfInventory
-onPlayerMoveInvenItem onPlayerMoveItemIntoIdxs onPlayerSwapInvenSlots
-onPlayerMoveInvenItemWithAmt onPlayerAttemptAltAction onPlayerAltAction
-onPlayerClick onClientOptionUpdated onInventoryUpdated onChestUpdated
-onWorldChangeBlock onCreateBloxdMeshEntity onEntityCollision
-onPlayerAttemptSpawnMob onWorldAttemptSpawnMob onPlayerSpawnMob
-onWorldSpawnMob onMobDespawned onPlayerAttack onPlayerDamagingOtherPlayer
-onPlayerDamagingMob onPlayerKilledOtherPlayer onMobKilledPlayer
-onPlayerKilledMob onPlayerPotionEffect onPlayerDamagingMeshEntity
-onPlayerBreakMeshEntity onPlayerUsedThrowable onPlayerThrowableHitTerrain
-onTouchscreenActionButton onTaskClaimed onChunkLoaded onPlayerRequestChunk
-onItemDropCreated onPlayerStartChargingItem onPlayerFinishChargingItem
-doPeriodicSave
+onPlayerPickedUpItem onPlayerSelectInventorySlot onBlockStand
+onPlayerAttemptCraft onPlayerCraft onPlayerAttemptOpenChest
+onPlayerOpenedChest onPlayerMoveItemOutOfInventory onPlayerMoveInvenItem
+onPlayerMoveItemIntoIdxs onPlayerSwapInvenSlots onPlayerMoveInvenItemWithAmt
+onPlayerAttemptAltAction onPlayerAltAction onPlayerClick
+onClientOptionUpdated onInventoryUpdated onChestUpdated onWorldChangeBlock
+onCreateBloxdMeshEntity onEntityCollision onPlayerAttemptSpawnMob
+onWorldAttemptSpawnMob onPlayerSpawnMob onWorldSpawnMob onMobDespawned
+onPlayerAttack onPlayerDamagingOtherPlayer onPlayerDamagingMob
+onMobDamagingPlayer onMobDamagingOtherMob onPlayerKilledOtherPlayer
+onMobKilledPlayer onPlayerKilledMob onMobKilledOtherMob onPlayerPotionEffect
+onPlayerDamagingMeshEntity onPlayerBreakMeshEntity onPlayerUsedThrowable
+onPlayerThrowableHitTerrain onTouchscreenActionButton onTaskClaimed
+onChunkLoaded onPlayerRequestChunk onItemDropCreated
+onPlayerStartChargingItem onPlayerFinishChargingItem doPeriodicSave
 
 To use a callback, just assign a function to it in the world code!
 tick = () => {}			 or			 function tick() {}
 ```
-
-Right now callbacks written by players will have their return values ignored (treated as undefined). The LoadedChunk argument which is normally passed to onChunkLoaded will also always be null.
 
 ```ts
 /**
@@ -157,8 +156,16 @@ onBlockStand: (
 ) => {}
 
 /**
- * Called when a player crafts an item
+ * Called when a player attempts to craft an item
  * Return "preventCraft" to prevent a craft from happening
+ * @param playerId - The id of the player that is attempting to craft the item
+ * @param itemName - The name of the item that is being crafted
+ * @param craftingIdx - The index of the used recipe in the item's recipe list
+ */
+onPlayerAttemptCraft: (playerId: PlayerId, itemName: string, craftingIdx: number) => {}
+
+/**
+ * Called when a player crafts an item
  * @param playerId - The id of the player that crafted the item
  * @param itemName - The name of the item that was crafted
  * @param craftingIdx - The index of the used recipe in the item's recipe list
@@ -424,6 +431,24 @@ onPlayerDamagingMob: (
 ) => {}
 
 /**
+ * Called when a mob is damaging a player
+ * @param attackingMob the id of the mob damaging the player
+ * @param damagedPlayer the id of the player being damaged
+ * @param damageDealt  the amount of damage dealt
+ * @param withItem the item used to attack
+ */
+onMobDamagingPlayer: (attackingMob: MobId, damagedPlayer: PlayerId, damageDealt: number, withItem: string) => {}
+
+/**
+ * Called when a mob is damaging another mob
+ * @param attackingMob the id of the mob attacking
+ * @param damagedMob the id of the mob being damaged
+ * @param damageDealt the amount of damage dealt
+ * @param withItem the item used to attack
+ */
+onMobDamagingOtherMob: (attackingMob: MobId, damagedMob: MobId, damageDealt: number, withItem: string) => {}
+
+/**
  * Called when a player kills another player
  * Return "keepInventory" to not drop the player's inventory
  * @param attackingPlayer - The id of the player attacking
@@ -453,6 +478,16 @@ onPlayerKilledMob: (
     damageDealt: number, // The amount of damage dealt
     withItem: string, // The item used to attack
 ) => {}
+
+/**
+ * Called when a mob kills another mob
+ * Return "preventDrop" to prevent the mob from dropping items
+ * @param attackingMob - The id of the mob attacking
+ * @param killedMob - The id of the mob killed
+ * @param damageDealt - The amount of damage dealt
+ * @param withItem - The item used to attack
+ */
+onMobKilledOtherMob: (attackingMob: MobId, killedMob: MobId, damageDealt: number, withItem: string) => {}
 
 /**
  * Called when a player is affected by a new potion effect
@@ -519,6 +554,7 @@ onTaskClaimed: (playerId, taskId, isPromoTask, claimedRewards) => {}
  * Called when a chunk is first loaded
  * @param chunkId - The id of the chunk being loaded
  * @param chunk - The chunk being loaded, which can be modified by this callback
+ * For world code callbacks this value will always be null.
  * @param wasPersistedChunk - Whether the chunk was persisted
  */
 onChunkLoaded: (chunkId: string, chunk: LoadedChunk, wasPersistedChunk: boolean) => {}
