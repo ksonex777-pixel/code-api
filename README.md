@@ -30,38 +30,38 @@ Please use [our discord](https://discord.gg/vwMp5y25RX) to report any issues you
 
 Code Block to make the player jump:
 
-```ts
+```js
 f = api.setVelocity(myId, 0, 9, 0)
 ```
 
 Push the player
 
-```ts
+```js
 api.applyImpulse(myId, 9, 0, 9)
 ```
 
 Send an orange message to yourself:
 
-```ts
+```js
 api.sendMessage(myId, "text", { color: "orange" })
 ```
 
 Create flying text:
 
-```ts
+```js
 const speed = 100
 api.sendFlyingMiddleMessage(myId, ["Message to display"], speed)
 ```
 
 Send a message to all players:
 
-```ts
+```js
 api.broadcastMessage("announcement", { color: "red" })
 ```
 
 Set player health to 99, and print the old health:
 
-```ts
+```js
 const oldHealth = api.getHealth(myId)
 api.setHealth(myId, 99)
 api.log("Old Health:", oldHealth)
@@ -69,7 +69,7 @@ api.log("Old Health:", oldHealth)
 
 Define a function to get the player IDs excluding your own ID:
 
-```ts
+```js
 getOtherIds = () => {
     const ids = api.getPlayerIds()
     const otherIds = []
@@ -84,7 +84,7 @@ getOtherIds = () => {
 
 Use the function above to make other players look like zombies:
 
-```ts
+```js
 for (const otherId of getOtherIds()) {
     api.setPlayerPose(otherId, "zombie")
     for (const part of ["head", "body", "legs"]) {
@@ -96,7 +96,7 @@ for (const otherId of getOtherIds()) {
 
 Make all players look like floating wizards:
 
-```ts
+```js
 for (const playerId of api.getPlayerIds()) {
     api.setPlayerPose(playerId, "driving")
     for (const part of ["head", "body", "legs"]) {
@@ -110,55 +110,58 @@ for (const playerId of api.getPlayerIds()) {
 
 Global object `api` has the following methods:
 
-```ts
+```js
 /**
  * Get position of a player / entity.
- * @param entityId
+ * @param {EntityId} entityId
+ * @returns {[number, number, number]}
  */
-getPosition(entityId: EntityId): [number, number, number]
+getPosition(entityId)
 
 /**
  * Set position of a player / entity.
- * @param entityId
- * @param x Can also be an array, in which case y and z shouldn't be passed
- * @param y
- * @param z
+ * @param {EntityId} entityId
+ * @param {number | number[]} x - Can also be an array, in which case y and z shouldn't be passed
+ * @param {number} [y]
+ * @param {number} [z]
+ * @returns {void}
  */
-setPosition(entityId: EntityId, x: number | number[], y?: number, z?: number): void
+setPosition(entityId, x, y, z)
 
 /**
  * Get all the player ids.
+ * @returns {PlayerId[]}
  */
-getPlayerIds(): PlayerId[]
+getPlayerIds()
 
 /**
  * Whether a player is currently in the game
  *
- * @param playerId
+ * @param {PlayerId} playerId
+ * @returns {boolean}
  */
-playerIsInGame(playerId: PlayerId): boolean
+playerIsInGame(playerId)
 
 /**
- *
- * @param playerId
- * @returns
+ * @param {PlayerId} playerId
+ * @returns {boolean}
  */
-playerIsLoggedIn(playerId: PlayerId): boolean
+playerIsLoggedIn(playerId)
 
 /**
  * Returns the party that the player was in when they joined the game. The returned object contains the playerDbIds, as well
  * as the playerIds if available, of the party leader and members.
  *
- * @param playerId
- *
- * @returns
+ * @param {PlayerId} playerId
+ * @returns {PNull<{ playerDbIds: PlayerDbId[] }>}
  */
-getPlayerPartyWhenJoined(playerId: PlayerId): PNull<{ playerDbIds: PlayerDbId[] }>
+getPlayerPartyWhenJoined(playerId)
 
 /**
  * Get the number of players in the room
+ * @returns {number}
  */
-getNumPlayers(): number
+getNumPlayers()
 
 /**
  * Get the co-ordinates of the blocks the player is standing on as a list. For example, if the center of the player is at 0,0,0
@@ -166,85 +169,89 @@ getNumPlayers(): number
  * If the player is just standing on one block, the function would return e.g. [[0, 0, 0]]
  * If the player is middair then returns an empty list [].
  *
- * @param playerId
+ * @param {PlayerId} playerId
+ * @returns {number[][]}
  */
-getBlockCoordinatesPlayerStandingOn(playerId: PlayerId): number[][]
+getBlockCoordinatesPlayerStandingOn(playerId)
 
 /**
  * Get the types of block the player is standing on
  * For example, if a player is standing on 4 dirt blocks, this will return ["Dirt", "Dirt", "Dirt", "Dirt"]
- * @param playerId
+ * @param {PlayerId} playerId
+ * @returns {any[]}
  */
-getBlockTypesPlayerStandingOn(playerId: PlayerId): any[]
+getBlockTypesPlayerStandingOn(playerId)
 
 /**
  * Get the up to 12 unit co-ordinates the lifeform is located within
  * (A lifeform is modelled as having four corners and can be in up to 3 blocks vertically)
  *
- * @param lifeformId
- * @returns List of x, y, z positions e.g. [[-1, 0, 0], [-1, 1, 0], [-1, 2, 0]]
+ * @param {LifeformId} lifeformId
+ * @returns {number[][]} - List of x, y, z positions e.g. [[-1, 0, 0], [-1, 1, 0], [-1, 2, 0]]
  */
-getUnitCoordinatesLifeformWithin(lifeformId: LifeformId): number[][]
+getUnitCoordinatesLifeformWithin(lifeformId)
 
 /**
  * Show the shop tutorial for a player. Will not be shown if they have ever seen the shop tutorial in your game before.
- * @param playerId
+ * @param {PlayerId} playerId
+ * @returns {void}
  */
-showShopTutorial(playerId: PlayerId): void
+showShopTutorial(playerId)
 
 /**
  * Get the current shield of an entity.
- * @param entityId
+ * @param {EntityId} entityId
+ * @returns {number}
  */
-getShieldAmount(entityId: EntityId): number
+getShieldAmount(entityId)
 
 /**
  * Set the current shield of a lifeform.
  *
- * @param lifeformId
- * @param newShieldAmount
+ * @param {LifeformId} lifeformId
+ * @param {number} newShieldAmount
+ * @returns {void}
  */
-setShieldAmount(lifeformId: LifeformId, newShieldAmount: number): void
+setShieldAmount(lifeformId, newShieldAmount)
 
 /**
  * Get the current health of an entity.
- * @param entityId
+ * @param {PlayerId} entityId
+ * @returns {number}
  */
-getHealth(entityId: PlayerId): number
+getHealth(entityId)
 
 /**
- *
- * @param lifeformId
- * @param changeAmount Must be an integer. A positive amount will increase the entity's health. A negative amount will decrease the entity's shield first, then their health.
- * @param whoDidDamage Optional - If damage done by another player
- * @param broadcastLifeformHurt
- *
- * @return Whether the entity was killed
+ * @param {LifeformId} lifeformId
+ * @param {number} changeAmount - Must be an integer. A positive amount will increase the entity's health. A negative amount will decrease the entity's shield first, then their health.
+ * @param {LifeformId | { lifeformId: LifeformId; withItem: string }} [whoDidDamage] - Optional - If damage done by another player
+ * @param {boolean} [broadcastLifeformHurt]
+ * @returns {boolean} - Whether the entity was killed
  */
-applyHealthChange(lifeformId: LifeformId, changeAmount: number, whoDidDamage?: LifeformId | { lifeformId: LifeformId; withItem: string }, broadcastLifeformHurt = true): boolean
+applyHealthChange(lifeformId, changeAmount, whoDidDamage, broadcastLifeformHurt)
 
 /**
  * Set the current health of an entity.
  * If you want to set their health to more than their current max health, the optional increaseMaxHealthIfNeeded must be true.
  *
- * @param entityId
- * @param newHealth Can be null to make the player not have health
- * @param whoDidDamage Optional
- * @param increaseMaxHealthIfNeeded Optional
- *
- * @return Whether this change in health killed the player
+ * @param {EntityId} entityId
+ * @param {PNull<number>} newHealth - Can be null to make the player not have health
+ * @param {LifeformId | { lifeformId: LifeformId; withItem: string }} [whoDidDamage] - Optional
+ * @param {boolean} [increaseMaxHealthIfNeeded] - Optional
+ * @returns {boolean} - Whether this change in health killed the player
  */
-setHealth(entityId: EntityId, newHealth: PNull<number>, whoDidDamage?: LifeformId | { lifeformId: LifeformId; withItem: string }, increaseMaxHealthIfNeeded = false): boolean
+setHealth(entityId, newHealth, whoDidDamage, increaseMaxHealthIfNeeded)
 
 /**
  * Make it as if hittingEId hit hitEId
  *
- * @param hittingEId
- * @param hitEId
- * @param dirFacing
- * @param bodyPartHit
+ * @param {PlayerId} hittingEId
+ * @param {PlayerId} hitEId
+ * @param {number[]} dirFacing
+ * @param {PNull<PlayerBodyPart>} [bodyPartHit]
+ * @returns {void}
  */
-applyMeleeHit(hittingEId: PlayerId, hitEId: PlayerId, dirFacing: number[], bodyPartHit?: PNull<PlayerBodyPart>): void
+applyMeleeHit(hittingEId, hitEId, dirFacing, bodyPartHit)
 
 /**
  * Apply damage to a lifeform.
@@ -252,22 +259,23 @@ applyMeleeHit(hittingEId: PlayerId, hitEId: PlayerId, dirFacing: number[], bodyP
  *
  * It is recommended to self-inflict damage when the game code wants to apply damage to a lifeform.
  *
- * @param eId
- * @param hitEId
- * @param attemptedDmgAmt
- * @param withItem
- * @param bodyPartHit
- * @param attackDir
- * @param showCritParticles
- * @param reduceVerticalKbVelocity
- * @param broadcastEntityHurt
- * @param attackCooldownSettings
- * @param hittingSoundOverride
- * @param ignoreOtherEntitySettingCanAttack
- * @param isTrueDamage
- * @param damagerDbId
- *
- * @returns whether the attack damaged the lifeform
+ * @param {PlayerAttemptDamageOtherPlayerOpts} {
+ *     eId,
+ *     hitEId,
+ *     attemptedDmgAmt,
+ *     withItem,
+ *     bodyPartHit = undefined,
+ *     attackDir = undefined,
+ *     showCritParticles = false,
+ *     reduceVerticalKbVelocity = true,
+ *     broadcastEntityHurt = true,
+ *     attackCooldownSettings = null,
+ *     hittingSoundOverride = null,
+ *     ignoreOtherEntitySettingCanAttack = false,
+ *     isTrueDamage = false,
+ *     damagerDbId = null,
+ * }
+ * @returns {boolean} - whether the attack damaged the lifeform
  */
 attemptApplyDamage({
     eId,
@@ -284,138 +292,242 @@ attemptApplyDamage({
     ignoreOtherEntitySettingCanAttack = false,
     isTrueDamage = false,
     damagerDbId = null,
-}: PlayerAttemptDamageOtherPlayerOpts): boolean
+    })
 
 /**
  * Force respawn a player
- * @param playerId
- * @param respawnPos
+ * @param {PlayerId} playerId
+ * @param {number[]} [respawnPos]
+ * @returns {void}
  */
-forceRespawn(playerId: PlayerId, respawnPos?: number[]): void
+forceRespawn(playerId, respawnPos)
 
 /**
  * Kill a lifeform.
- * @param lifeformId
- * @param whoKilled Optional
+ * @param {LifeformId} lifeformId
+ * @param {LifeformId | { lifeformId: LifeformId; withItem: string }} [whoKilled] - Optional
+ * @returns {void}
  */
-killLifeform(lifeformId: LifeformId, whoKilled?: LifeformId | { lifeformId: LifeformId; withItem: string }): void
+killLifeform(lifeformId, whoKilled)
 
 /**
  * Gets the player's current killstreak
  *
- * @param playerId
- * @returns
+ * @param {PlayerId} playerId
+ * @returns {number}
  */
-getCurrentKillstreak(playerId: PlayerId): number
+getCurrentKillstreak(playerId)
 
 /**
  * Clears the player's current killstreak
  *
- * @param playerId
+ * @param {PlayerId} playerId
+ * @returns {void}
  */
-clearKillstreak(playerId: PlayerId): void
+clearKillstreak(playerId)
 
 /**
  * Whether a lifeform is alive or dead (or on the respawn screen, in a player's case).
  *
- * @param lifeformId
- * @returns
+ * @param {LifeformId} lifeformId
+ * @returns {boolean}
  */
-isAlive(lifeformId: LifeformId): boolean
+isAlive(lifeformId)
 
 /**
  * Send a message to everyone
  *
- * @param message The text contained within the message. Can use `Custom Text Styling`.
- * @param style An optional style argument. Can contain values for fontWeight and color of the message.
- *          style is ignored if message uses custom text styling (i.e. is not a string)
+ * @param {string | CustomTextStyling} message - The text contained within the message. Can use `Custom Text Styling`.
+ * @param {{ fontWeight?: number | string; color?: string }} [style] - An optional style argument. Can contain values for fontWeight and color of the message.
+ * @returns {void}
  */
-broadcastMessage(message: string | CustomTextStyling, style?: { fontWeight?: number | string; color?: string }): void
+broadcastMessage(message, style)
 
 /**
  * Send a message to a specific player
  *
- * @param playerId Id of the player
- * @param message The text contained within the message. Can use `Custom Text Styling`.
- * @param style An optional style argument. Can contain values for fontWeight and color of the message.
- *              style is ignored if message uses custom text styling (i.e. is not a string)
+ * @param {PlayerId} playerId - Id of the player
+ * @param {string | CustomTextStyling} message - The text contained within the message. Can use `Custom Text Styling`.
+ * @param {{ fontWeight?: number | string; color?: string }} [style] - An optional style argument. Can contain values for fontWeight and color of the message.
+ * @returns {void}
  */
-sendMessage(playerId: PlayerId, message: string | CustomTextStyling, style?: { fontWeight?: number | string; color?: string }): void
+sendMessage(playerId, message, style)
 
 /**
  * Send a flying middle message to a specific player
  *
- * @param playerId Id of the player
- * @param message The text contained within the message. Can use `Custom Text Styling`.
- * @param distanceFromAction The distance from the action that has caused this message to be displayed, this value
- *                           will be used to determine how the message flies across the screen
+ * @param {PlayerId} playerId - Id of the player
+ * @param {CustomTextStyling} message - The text contained within the message. Can use `Custom Text Styling`.
+ * @param {number} distanceFromAction - The distance from the action that has caused this message to be displayed, this value
+ * @returns {void}
  */
-sendFlyingMiddleMessage(playerId: PlayerId, message: CustomTextStyling, distanceFromAction: number): void
+sendFlyingMiddleMessage(playerId, message, distanceFromAction)
+
+/**
+ * Modify a client option at runtime and send to the client if it changed
+ *
+ * @param {PlayerId} playerId
+ * @param {PassedOption} option - The name of the option
+ * @param {ClientOptions[PassedOption]} value - The new value of the option
+ * @returns {void}
+ */
+setClientOption(playerId, option, value)
+
+/**
+ * Returns the current value of a client option
+ *
+ * @param {PlayerId} playerId
+ * @param {PassedOption} option
+ * @returns {ClientOptions[PassedOption]}
+ */
+getClientOption(playerId, option)
+
+/**
+ * Modify client options at runtime
+ *
+ * @param {PlayerId} playerId
+ * @param {Partial<ClientOptions>} optionsObj - An object which contains key value pairs of new settings. E.g {canChange: true, speedMultiplier: false}
+ * @returns {void}
+ */
+setClientOptions(playerId, optionsObj)
+
+/**
+ * Sets a client option to its default value. This will be the value stored in your game's defaultClientOptions, otherwise Bloxd's default.
+ *
+ * @param {PlayerId} playerId
+ * @param {ClientOption} option
+ * @returns {void}
+ */
+setClientOptionToDefault(playerId, option)
+
+/**
+ * Set every player's other-entity setting to a specific value for a particular player.
+ * includeNewJoiners=true means that new players joining the game will also have this other player setting applied.
+ *
+ * @param {PlayerId} targetedPlayerId
+ * @param {Setting} settingName
+ * @param {OtherEntitySettings[Setting]} settingValue
+ * @param {boolean} [includeNewJoiners]
+ * @returns {void}
+ */
+setTargetedPlayerSettingForEveryone(targetedPlayerId, settingName, settingValue, includeNewJoiners)
+
+/**
+ * Set a player's other-entity setting for every player in the game.
+ * includeNewJoiners=true means that the player will have the setting applied to new joiners.
+ *
+ * @param {PlayerId} playerId
+ * @param {Setting} settingName
+ * @param {OtherEntitySettings[Setting]} settingValue
+ * @param {boolean} [includeNewJoiners]
+ * @returns {void}
+ */
+setEveryoneSettingForPlayer(playerId, settingName, settingValue, includeNewJoiners)
+
+/**
+ * Set a player's other-entity setting for a specific entity.
+ *
+ * @param {PlayerId} relevantPlayerId
+ * @param {EntityId} targetedEntityId
+ * @param {Setting} settingName
+ * @param {OtherEntitySettings[Setting]} settingValue
+ * @returns {void}
+ */
+setOtherEntitySetting(relevantPlayerId, targetedEntityId, settingName, settingValue)
+
+/**
+ * Set many of a player's other-entity settings for a specific entity.
+ *
+ * @param {PlayerId} relevantPlayerId
+ * @param {EntityId} targetedEntityId
+ * @param {Partial<OtherEntitySettings>} settingsObject
+ * @returns {void}
+ */
+setOtherEntitySettings(relevantPlayerId, targetedEntityId, settingsObject)
+
+/**
+ * Get the value of a player's other-entity setting for a specific entity.
+ *
+ * @param {PlayerId} relevantPlayerId
+ * @param {EntityId} targetedEntityId
+ * @param {Setting} settingName
+ * @returns {OtherEntitySettings[Setting]}
+ */
+getOtherEntitySetting(relevantPlayerId, targetedEntityId, settingName)
 
 /**
  * Play particle effect on all clients, or only on some clients if clientPredictedBy is specified
- * @param opts
- * @param clientPredictedBy Play only on clients where client with playerId clientPredictedBy
- *                          is not invisible, transparent, or themselves
+ * @param {TempParticleSystemOpts} opts
+ * @param {PlayerId} [clientPredictedBy] - Play only on clients where client with playerId clientPredictedBy
+ * @returns {void}
  */
-playParticleEffect(opts: TempParticleSystemOpts, clientPredictedBy: PlayerId = null): void
+playParticleEffect(opts, clientPredictedBy)
 
 /**
  * Get the in game name of an entity.
- * @param entityId
+ * @param {EntityId} entityId
+ * @returns {string}
  */
-getEntityName(entityId: EntityId): string
+getEntityName(entityId)
 
 /**
  * Given the name of a player, get their id
- * @param playerName
+ * @param {string} playerName
+ * @returns {PNull<PlayerId>}
  */
-getPlayerId(playerName: string): PNull<PlayerId>
+getPlayerId(playerName)
 
 /**
  * Given a player, get their permanent identifier that doesn't change when leaving and re-entering
  *
- * @param playerId
+ * @param {PlayerId} playerId
+ * @returns {PlayerDbId}
  */
-getPlayerDbId(playerId: PlayerId): PlayerDbId
+getPlayerDbId(playerId)
 
 /**
  * Returns null if player not in lobby
  *
- * @param dbId
+ * @param {PlayerDbId} dbId
+ * @returns {PNull<PlayerId>}
  */
-getPlayerIdFromDbId(dbId: PlayerDbId): PNull<PlayerId>
+getPlayerIdFromDbId(dbId)
 
-
-kickPlayer(playerId: PlayerId, reason: string): void
+/**
+ * @param {PlayerId} playerId
+ * @param {string} reason
+ * @returns {void}
+ */
+kickPlayer(playerId, reason)
 
 /**
  * Check if the block at a specific position is in a loaded chunk.
- * @param x
- * @param y
- * @param z
- * @return boolean
+ * @param {number} x
+ * @param {number} y
+ * @param {number} z
+ * @returns {boolean} - boolean
  */
-isBlockInLoadedChunk(x: number, y: number, z: number): boolean
+isBlockInLoadedChunk(x, y, z)
 
 /**
  * Get the name of a block.
- * @param x could be an array [x, y, z]. If so, the other params shouldn't be passed.
- * @param y
- * @param z
- * @return blockName - will be a name contained in blockMetadata.ts or 'Air'
+ * @param {number | number[]} x - could be an array [x, y, z]. If so, the other params shouldn't be passed.
+ * @param {number} [y]
+ * @param {number} [z]
+ * @returns {BlockName} - blockName - will be a name contained in blockMetadata.ts or 'Air'
  */
-getBlock(x: number | number[], y?: number, z?: number): BlockName
+getBlock(x, y, z)
 
 /**
  * Used to get the block id at a specific position.
  * Intended only for use in hot code paths - default to getBlock for most use cases
  *
- * @param x
- * @param y
- * @param z
+ * @param {number} x
+ * @param {number} y
+ * @param {number} z
+ * @returns {BlockId}
  */
-getBlockId(x: number, y: number, z: number): BlockId
+getBlockId(x, y, z)
 
 /**
  * Set a block. Valid names are those either contained in blockMetadata.ts or are 'Air'
@@ -428,59 +540,62 @@ getBlockId(x: number, y: number, z: number): BlockId
  *
  *
  *
- * @param x Can be an array
- * @param y Should be blockname if first param is array
- * @param z
- * @param blockName
+ * @param {number | number[]} x - Can be an array
+ * @param {number | BlockName} y - Should be blockname if first param is array
+ * @param {number} [z]
+ * @param {BlockName} [blockName]
+ * @returns {void}
  */
-setBlock(x: number | number[], y: number | BlockName, z?: number, blockName?: BlockName): void
+setBlock(x, y, z, blockName)
 
 /**
  * Initiate a block change "by the world".
  * This ends up calling the onWorldChangeBlock and only makes the change if not prevented by game/plugins.
  * initiatorDbId is null if the change was initiated by the game code.
  *
- * @param initiatorDbId
- * @param x
- * @param y
- * @param z
- * @param blockName
- *
- * @returns "preventChange" if the change was prevented, "preventDrop" if the change was allowed but without dropping any items, and undefined if the change was allowed with an item drop
+ * @param {PNull<PlayerDbId>} initiatorDbId
+ * @param {number} x
+ * @param {number} y
+ * @param {number} z
+ * @param {BlockName} blockName
+ * @returns {"preventChange" | "preventDrop" | void} - "preventChange" if the change was prevented, "preventDrop" if the change was allowed but without dropping any items, and undefined if the change was allowed with an item drop
  */
-attemptWorldChangeBlock(initiatorDbId: PNull<PlayerDbId>, x: number, y: number, z: number, blockName: BlockName): "preventChange" | "preventDrop" | void
+attemptWorldChangeBlock(initiatorDbId, x, y, z, blockName)
 
 /**
  * Returns whether a block is solid or not.
  * E.g. Grass block is solid, while water, ladder and water are not.
  * Will be true if the block is unloaded.
  *
- * @param x
- * @param y
- * @param z
+ * @param {number | number[]} x
+ * @param {number} [y]
+ * @param {number} [z]
+ * @returns {boolean}
  */
-getBlockSolidity(x: number | number[], y?: number, z?: number): boolean
+getBlockSolidity(x, y, z)
 
 /**
  * Helper function that sets all blocks in a rectangle to a specific block.
  *
- * @param pos1 array [x, y, z]
- * @param pos2 array [x, y, z]
- * @param blockName
+ * @param {number[]} pos1 - array [x, y, z]
+ * @param {number[]} pos2 - array [x, y, z]
+ * @param {BlockName} blockName
+ * @returns {void}
  */
-setBlockRect(pos1: number[], pos2: number[], blockName: BlockName): void
+setBlockRect(pos1, pos2, blockName)
 
 /**
  * Create walls by providing two opposite corners of the cuboid
  *
  *
- * @param pos1 array [x, y, z]
- * @param pos2 array [x, y, z]
- * @param blockName
- * @param hasFloor
- * @param hasCeiling
+ * @param {number[]} pos1 - array [x, y, z]
+ * @param {number[]} pos2 - array [x, y, z]
+ * @param {BlockName} blockName
+ * @param {boolean} [hasFloor]
+ * @param {boolean} [hasCeiling]
+ * @returns {void}
  */
-setBlockWalls(pos1: number[], pos2: number[], blockName: BlockName, hasFloor = false, hasCeiling = false): void
+setBlockWalls(pos1, pos2, blockName, hasFloor, hasCeiling)
 
 /**
  * Only use this instead of getBlock if you REALLY need the performance (i.e. you are iterating over tens of thousands of blocks)
@@ -489,11 +604,10 @@ setBlockWalls(pos1: number[], pos2: number[], blockName: BlockName, hasFloor = f
  * Each block id is a 16-bit number
  * The ndarray should only be read from, writing to it will result in desync between the server and client
  *
- * @param pos The returned chunk contains pos
- * @returns null if the chunk is not loaded in a persisted world. ReturnedObject.blockData is an ndarray that can be accessed
- * (but modifications have to be saved with resetChunk).
+ * @param {number[]} pos - The returned chunk contains pos
+ * @returns {PNull<GameChunk>} - null if the chunk is not loaded in a persisted world. ReturnedObject.blockData is an ndarray that can be accessed
  */
-getChunk(pos: number[]): PNull<GameChunk>
+getChunk(pos)
 
 /**
  * Use this to get a chunk ndarray you can edit and set in resetChunk.
@@ -502,48 +616,52 @@ getChunk(pos: number[]): PNull<GameChunk>
  * ReturnedObject.blockData is a 32x32x32 ndarray of air.
  * (see https://www.npmjs.com/package/ndarray)
  * Each block id is a 16-bit number
+ * @returns {GameChunk}
  */
-getEmptyChunk(): GameChunk
+getEmptyChunk()
 
 /**
  * Splits the block name by '|'. If no meta info, metaInfo is ''
  *
- * @param blockName
+ * @param {BlockName | null | undefined} blockName
+ * @returns {ItemMetaInfo}
  */
-getMetaInfo(blockName: BlockName | null | undefined): ItemMetaInfo
+getMetaInfo(blockName)
 
 /**
  * Get the numeric id of a block used in the ndarrays returned from getChunk
  * I.e. chunk.blockData.set(x, y, z, api.blockNameToBlockId("Dirt"))
  * or chunk.blockData.get(x, y, z) === api.blockNameToBlockId("Dirt")
  *
- * @param blockName
- * @param allowInvalidBlock Don't throw an error if the block name is invalid. Defaults false.
- *      If true and name is invalid, returns null
- * @returns
+ * @param {string} blockName
+ * @param {boolean} [allowInvalidBlock] - Don't throw an error if the block name is invalid.
+ * @returns {PNull<number>}
  */
-blockNameToBlockId(blockName: string, allowInvalidBlock = false): PNull<number>
+blockNameToBlockId(blockName, allowInvalidBlock)
 
 /**
  * Goes from block id to block name. The reverse of blockNameToBlockId
  *
- * @param blockId
+ * @param {BlockId} blockId
+ * @returns {BlockName}
  */
-blockIdToBlockName(blockId: BlockId): BlockName
+blockIdToBlockName(blockId)
 
 /**
  * Get the unique id of the chunk containing pos in the current map
  *
- * @param pos
+ * @param {number[]} pos
+ * @returns {string}
  */
-blockCoordToChunkId(pos: number[]): string
+blockCoordToChunkId(pos)
 
 /**
  * Get the co-ordinates of the block in the chunk with the lowest x, y, and z co-ordinates
  *
- * @param chunkId
+ * @param {string} chunkId
+ * @returns {[number, number, number]}
  */
-chunkIdToBotLeftCoord(chunkId: string): [number, number, number]
+chunkIdToBotLeftCoord(chunkId)
 
 /**
  * @deprecated - prefer using other UI elements
@@ -551,59 +669,54 @@ chunkIdToBotLeftCoord(chunkId: string): [number, number, number]
  *
  * Send a player an icon in the top right corner
  *
- * @param playerId
- * @param icon Can be any icon from font-awesome.
- * @param text The text to send.
- * @param opts Can include keys duration, width, height, color, iconSizeMult.
- *
- * Default opts: {
- *  duration: 8, // seconds
- *  width: 400px,
- *  height: 100px,
- *  color: 'rgb(102, 102, 102)', // must be rgb in this format (hex not supported),
- *  iconSizeMult: 5,
- *  textAndIconColor: "white", // can be any colour supported by css (e.g. hex, rgb),
- *  fontSize: '17px',
- * }
+ * @param {PlayerId} playerId
+ * @param {string} icon - Can be any icon from font-awesome.
+ * @param {string} text - The text to send.
+ * @param {{
+ *     duration?: number
+ *     width?: number
+ *     height?: number
+ *     color?: string
+ *     iconSizeMult?: number
+ *     textAndIconColor?: string
+ *     fontSize?: string
+ * }} opts - Can include keys duration, width, height, color, iconSizeMult.
+ * @returns {void}
  */
-sendTopRightHelper(playerId: PlayerId, icon: string, text: string, opts: {
-    duration?: number
-    width?: number
-    height?: number
-    color?: string
-    iconSizeMult?: number
-    textAndIconColor?: string
-    fontSize?: string
-}): void
+sendTopRightHelper(playerId, icon, text, opts)
 
 /**
  * Whether the player is on a mobile device or a computer.
- * @param playerId
+ * @param {PlayerId} playerId
+ * @returns {boolean}
  */
-isMobile(playerId: PlayerId): boolean
+isMobile(playerId)
 
 /**
  * Prevent a player from picking up an item. itemId returned by createItemDrop
  *
- * @param playerId
- * @param itemId
+ * @param {PlayerId} playerId
+ * @param {EntityId} itemId
+ * @returns {void}
  */
-setCantPickUpItem(playerId: PlayerId, itemId: EntityId): void
+setCantPickUpItem(playerId, itemId)
 
 /**
  * Delete an item drop by item drop entity ID
  *
- * @param itemId
+ * @param {EntityId} itemId
+ * @returns {void}
  */
-deleteItemDrop(itemId: EntityId): void
+deleteItemDrop(itemId)
 
 /**
  * Get the metadata about a block or item before stats have been modified by any client options
  * (i.e. its entry in either blockMetadata.ts or nonBlockMetadata in itemMetadata.ts)
  *
- * @param itemName
+ * @param {string} itemName
+ * @returns {Partial<BlockMetadataItem & NonBlockMetadataItem>}
  */
-getInitialItemMetadata(itemName: string): Partial<BlockMetadataItem & NonBlockMetadataItem>
+getInitialItemMetadata(itemName)
 
 /**
  * Get stat info about a block or item
@@ -613,43 +726,48 @@ getInitialItemMetadata(itemName: string): Partial<BlockMetadataItem & NonBlockMe
  * If null is passed for playerId, this is simply its entry in blockMetadata etc.
  *
  *
- * @param playerId
- * @param itemName
- * @param stat
+ * @param {PNull<PlayerId>} playerId
+ * @param {string} itemName
+ * @param {K} stat
+ * @returns {AnyMetadataItem[K]}
  */
-getItemStat<K extends keyof AnyMetadataItem>(playerId: PNull<PlayerId>, itemName: string, stat: K): AnyMetadataItem[K]
+getItemStat(playerId, itemName, stat)
 
 /**
  * Set the direction the player is looking.
  *
- * @param playerId
- * @param direction a vector of the direction to look, format [x, y, z]
+ * @param {PlayerId} playerId
+ * @param {number[]} direction - a vector of the direction to look, format [x, y, z]
+ * @returns {void}
  */
-setCameraDirection(playerId: PlayerId, direction: number[]): void
+setCameraDirection(playerId, direction)
 
 /**
  * Set a player's opacity
  * A simple helper that calls setTargetedPlayerSettingForEveryone
  *
- * @param playerId
- * @param opacity
+ * @param {PlayerId} playerId
+ * @param {number} opacity
+ * @returns {void}
  */
-setPlayerOpacity(playerId: PlayerId, opacity: number): void
+setPlayerOpacity(playerId, opacity)
 
 /**
  * Set the level of viewable opacity by one player on another player
  * A simple helper that calls setOtherEntitySetting
  *
- * @param playerIdWhoViewsOpacityPlayer The player who sees that with opacity
- * @param playerIdOfOpacityPlayer The player/player model who is given opacity
- * @param opacity
+ * @param {PlayerId} playerIdWhoViewsOpacityPlayer - The player who sees that with opacity
+ * @param {PlayerId} playerIdOfOpacityPlayer - The player/player model who is given opacity
+ * @param {number} opacity
+ * @returns {void}
  */
-setPlayerOpacityForOnePlayer(playerIdWhoViewsOpacityPlayer: PlayerId, playerIdOfOpacityPlayer: PlayerId, opacity: number): void
+setPlayerOpacityForOnePlayer(playerIdWhoViewsOpacityPlayer, playerIdOfOpacityPlayer, opacity)
 
 /**
  * Obtain Date.now() value saved at start of current game tick
+ * @returns {number}
  */
-now(): number
+now()
 
 /**
  * Check your game (and, optionally, a entity) is still valid and executing.
@@ -657,59 +775,65 @@ now(): number
  * If you use await/async or promises and do not check this, your game could have closed and then the rest of your
  * async code executes.
  *
- * @param entityId
+ * @param {PNull<EntityId>} [entityId]
+ * @returns {boolean}
  */
-checkValid(entityId?: PNull<EntityId>): boolean
+checkValid(entityId)
 
 /**
  * Let a player change a block at a specific co-ordinate. Useful when client option canChange is false.
  * Overrides blockRect and blockType settings, so also useful when you have disallowed changing of a block type with setCantChangeBlockType.
  * Using this on 1000s of blocks will cause lag - if that is needed, find a way to use setCanChangeBlockType.
  *
- * @param playerId
- * @param x
- * @param y
- * @param z
+ * @param {PlayerId} playerId
+ * @param {number} x
+ * @param {number} y
+ * @param {number} z
+ * @returns {void}
  */
-setCanChangeBlock(playerId: PlayerId, x: number, y: number, z: number): void
+setCanChangeBlock(playerId, x, y, z)
 
 /**
  * Prevents a player from changing a block at a specific co-ordinate. Useful when client option canChange is true.
  * Overrides blockRect and blockType settings, so also useful when you have allowed changing of a block type with setCantChangeBlockType.
  * Using this on 1000s of blocks will cause lag - if that is needed, find a way to use setCantChangeBlockType.
  *
- * @param playerId
- * @param x
- * @param y
- * @param z
+ * @param {PlayerId} playerId
+ * @param {number} x
+ * @param {number} y
+ * @param {number} z
+ * @returns {void}
  */
-setCantChangeBlock(playerId: PlayerId, x: number, y: number, z: number): void
+setCantChangeBlock(playerId, x, y, z)
 
 /**
  * Lets a player Change a block type. Valid names are those contained within blockMetadata.ts and 'Air'
  * Less priority than cant change block pos/can change block rect
  *
- * @param playerId
- * @param blockName
+ * @param {PlayerId} playerId
+ * @param {BlockName} blockName
+ * @returns {void}
  */
-setCanChangeBlockType(playerId: PlayerId, blockName: BlockName): void
+setCanChangeBlockType(playerId, blockName)
 
 /**
  * Stops a player from Changeing a block type. Valid names are those contained within blockMetadata.ts and 'Air'
  * Less priority than can change block pos/can change block rect
  *
- * @param playerId
- * @param blockName
+ * @param {PlayerId} playerId
+ * @param {BlockName} blockName
+ * @returns {void}
  */
-setCantChangeBlockType(playerId: PlayerId, blockName: BlockName): void
+setCantChangeBlockType(playerId, blockName)
 
 /**
  * Remove any previous can/cant change block type settings for a player
  *
- * @param playerId
- * @param blockName
+ * @param {PlayerId} playerId
+ * @param {BlockName} blockName
+ * @returns {void}
  */
-resetCanChangeBlockType(playerId: PlayerId, blockName: BlockName): void
+resetCanChangeBlockType(playerId, blockName)
 
 /**
  * Make it so a player can Change blocks within two points. Coordinates are inclusive. E.g. if [0, 0, 0] is pos1
@@ -717,11 +841,12 @@ resetCanChangeBlockType(playerId: PlayerId, blockName: BlockName): void
  * Overrides setCantChangeBlockType
  *
  *
- * @param playerId
- * @param pos1 Arg as [x, y, z]
- * @param pos2 Arg as [x, y, z]
+ * @param {PlayerId} playerId
+ * @param {number[]} pos1 - Arg as [x, y, z]
+ * @param {number[]} pos2 - Arg as [x, y, z]
+ * @returns {void}
  */
-setCanChangeBlockRect(playerId: PlayerId, pos1: number[], pos2: number[]): void
+setCanChangeBlockRect(playerId, pos1, pos2)
 
 /**
  * Make it so a player cant Change blocks within two points. Coordinates are inclusive. E.g. if [0, 0, 0] is pos1
@@ -729,30 +854,33 @@ setCanChangeBlockRect(playerId: PlayerId, pos1: number[], pos2: number[]): void
  * Overrides setCanChangeBlockType
  *
  *
- * @param playerId
- * @param pos1 Arg as [x, y, z]
- * @param pos2 Arg as [x, y, z]
+ * @param {PlayerId} playerId
+ * @param {number[]} pos1 - Arg as [x, y, z]
+ * @param {number[]} pos2 - Arg as [x, y, z]
+ * @returns {void}
  */
-setCantChangeBlockRect(playerId: PlayerId, pos1: number[], pos2: number[]): void
+setCantChangeBlockRect(playerId, pos1, pos2)
 
 /**
  * Remove any previous can/cant change block rect settings for a player
  *
- * @param playerId
- * @param pos1
- * @param pos2
+ * @param {PlayerId} playerId
+ * @param {number[]} pos1
+ * @param {number[]} pos2
+ * @returns {void}
  */
-resetCanChangeBlockRect(playerId: PlayerId, pos1: number[], pos2: number[]): void
+resetCanChangeBlockRect(playerId, pos1, pos2)
 
 /**
  * Allow a player to walk through a type of block. For blocks that are normally solid and not seethrough, the player will experience slight visual glitches while inside the block.
  *
  *
- * @param playerId
- * @param blockName
- * @param disable If you've enabled a player to walk through a block and want to make the block solid for them again, pass this with true. Otherwise you only need to pass playerId and blockName
+ * @param {PlayerId} playerId
+ * @param {BlockName} blockName
+ * @param {boolean} [disable] - If you've enabled a player to walk through a block and want to make the block solid for them again, pass this with true. Otherwise you only need to pass playerId and blockName
+ * @returns {void}
  */
-setWalkThroughType(playerId: PlayerId, blockName: BlockName, disable = false): void
+setWalkThroughType(playerId, blockName, disable)
 
 /**
  * Allow a player to walk through (or not walk through) voxels that are located within a given rectangle.
@@ -760,531 +888,587 @@ setWalkThroughType(playerId: PlayerId, blockName: BlockName, disable = false): v
  *
  * You could set both pos1 and pos2 to [0, 0, 0] to make only 0, 0, 0 walkthrough, for example.
  *
- * @param playerId
- * @param pos1 The one corner of the cuboid. Format [x, y, z]
- * @param pos2 The top right corner of the cuboid. Format [x, y, z]
- * @param updateType The type of update. Whether to make a rect solid, or able to be walked through.
- * Pass DEFAULT_WALK_THROUGH with a previously passed rect to disable any walkthrough setting for that rect
- *
+ * @param {PlayerId} playerId
+ * @param {number[]} pos1 - The one corner of the cuboid. Format [x, y, z]
+ * @param {number[]} pos2 - The top right corner of the cuboid. Format [x, y, z]
+ * @param {WalkThroughType} updateType - The type of update. Whether to make a rect solid, or able to be walked through.
+ * @returns {void}
  */
-setWalkThroughRect(playerId: PlayerId, pos1: number[], pos2: number[], updateType: WalkThroughType): void
+setWalkThroughRect(playerId, pos1, pos2, updateType)
 
 /**
  * Give a player an item and a certain amount of that item.
  * Returns the amount of item added to the users inventory.
  *
- * @param playerId
- * @param itemName
- * @param itemAmount
- * @param attributes An optional object for certain types of item. For guns this can contain the shotsLeft field which is the amount of ammo the gun currently has.
+ * @param {PlayerId} playerId
+ * @param {string} itemName
+ * @param {number} [itemAmount]
+ * @param {ItemAttributes} [attributes] - An optional object for certain types of item. For guns this can contain the shotsLeft field which is the amount of ammo the gun currently has.
+ * @returns {number}
  */
-giveItem(playerId: PlayerId, itemName: string, itemAmount?: number, attributes?: ItemAttributes): number
+giveItem(playerId, itemName, itemAmount, attributes)
 
 /**
  * Whether the player has space in their inventory to get new blocks
- * @param playerId
+ * @param {PlayerId} playerId
+ * @returns {boolean}
  */
-inventoryIsFull(playerId: PlayerId): boolean
+inventoryIsFull(playerId)
 
 /**
  * Put an item in a specific index. Default hotbar is indexes 0-9
  *
- * @param playerId
- * @param itemSlotIndex 0-indexed
- * @param itemName Can be 'Air', in which case itemAmount will be ignored and the slot will be cleared.
- * @param itemAmount -1 for infinity. Should not be set, or null, for items that are not stackable.
- * @param attributes An optional object for certain types of item. For guns this can contain the shotsLeft field which is the amount of ammo the gun currently has.
- * @param tellClient whether to tell client about it - results in desync between client and server if client doesnt locally perform the same action
+ * @param {PlayerId} playerId
+ * @param {number} itemSlotIndex - 0-indexed
+ * @param {string} itemName - Can be 'Air', in which case itemAmount will be ignored and the slot will be cleared.
+ * @param {PNull<number>} [itemAmount] - -1 for infinity. Should not be set, or null, for items that are not stackable.
+ * @param {ItemAttributes} [attributes] - An optional object for certain types of item. For guns this can contain the shotsLeft field which is the amount of ammo the gun currently has.
+ * @param {boolean} [tellClient] - whether to tell client about it - results in desync between client and server if client doesnt locally perform the same action
+ * @returns {void}
  */
-setItemSlot(playerId: PlayerId, itemSlotIndex: number, itemName: string, itemAmount?: PNull<number>, attributes?: ItemAttributes, tellClient = true): void
+setItemSlot(playerId, itemSlotIndex, itemName, itemAmount, attributes, tellClient)
 
 /**
  * Remove an amount of item from a player's inventory
  *
- * @param playerId
- * @param itemName
- * @param amount
+ * @param {PlayerId} playerId
+ * @param {string} itemName
+ * @param {number} amount
+ * @returns {void}
  */
-removeItemName(playerId: PlayerId, itemName: string, amount: number): void
+removeItemName(playerId, itemName, amount)
 
 /**
  * Get the item at a specific index
  * Returns null if there is no item at that index
  * If there is an item, return an object of the format {name: itemName, amount: amountOfItem}
  *
- * @param playerId
- * @param itemSlotIndex
+ * @param {PlayerId} playerId
+ * @param {number} itemSlotIndex
+ * @returns {PNull<InvenItem>}
  */
-getItemSlot(playerId: PlayerId, itemSlotIndex: number): PNull<InvenItem>
+getItemSlot(playerId, itemSlotIndex)
 
 /**
  * Whether a player has an item
  *
- * @param playerId
- * @param itemName
- * @returns bool
+ * @param {PlayerId} playerId
+ * @param {string} itemName
+ * @returns {boolean} - bool
  */
-hasItem(playerId: PlayerId, itemName: string): boolean
+hasItem(playerId, itemName)
 
 /**
  * The amount of an itemName a player has.
  * Returns 0 if the player has none, and a negative number if infinite.
  *
- * @param playerId
- * @param itemName
- * @returns number
+ * @param {PlayerId} playerId
+ * @param {string} itemName
+ * @returns {number} - number
  */
-getInventoryItemAmount(playerId: PlayerId, itemName: string): number
+getInventoryItemAmount(playerId, itemName)
 
 /**
  * Clear the players inventory
  *
- * @param playerId
+ * @param {PlayerId} playerId
+ * @returns {void}
  */
-clearInventory(playerId: PlayerId): void
+clearInventory(playerId)
 
 /**
  * Force the player to have the ith inventory slot selected. E.g. newI 0 makes the player have the 0th inventory slot selected
  *
- * @param playerId
- * @param newI integer from 0-9
+ * @param {PlayerId} playerId
+ * @param {number} newI - integer from 0-9
+ * @returns {void}
  */
-setSelectedInventorySlotI(playerId: PlayerId, newI: number): void
+setSelectedInventorySlotI(playerId, newI)
 
 /**
  * Get a player's currently selected inventory slot
- * @param playerId
- * @returns
+ * @param {PlayerId} playerId
+ * @returns {number}
  */
-getSelectedInventorySlotI(playerId: PlayerId): number
+getSelectedInventorySlotI(playerId)
 
 /**
  * Get the currently held item of a player
  * Returns null if no item is being held
  * If an item is held, return an object of the format {name: itemName, amount: amountOfItem}
  *
- * @param playerId
+ * @param {PlayerId} playerId
+ * @returns {PNull<InvenItem>}
  */
-getHeldItem(playerId: PlayerId): PNull<InvenItem>
+getHeldItem(playerId)
 
 /**
  * Get the amount of free slots in a player's inventory.
  *
- * @param playerId
- * @returns number
+ * @param {PlayerId} playerId
+ * @returns {number} - number
  */
-getInventoryFreeSlotCount(playerId: PlayerId): number
+getInventoryFreeSlotCount(playerId)
 
 /**
  * Checks if a player is able to open a chest at a given location,
  * as per the rules laid out by the "onPlayerAttemptOpenChest" game callback.
  * Returns true if the player can open the chest, false if they cannot, and void if the chest does not exist.
  *
- * @param playerId
- * @param chestX
- * @param chestY
- * @param chestZ
+ * @param {PlayerId} playerId
+ * @param {number} chestX
+ * @param {number} chestY
+ * @param {number} chestZ
+ * @returns {PNull<boolean>}
  */
-canOpenStandardChest(playerId: PlayerId, chestX: number, chestY: number, chestZ: number): PNull<boolean>
+canOpenStandardChest(playerId, chestX, chestY, chestZ)
 
 /**
  * Give a standard chest an item and a certain amount of that item.
  * Returns the amount of item added to the chest.
  *
- * @param chestPos
- * @param itemName
- * @param itemAmount
- * @param playerId The player who is interacting with the chest.
- * @param attributes An optional object for certain types of item. For guns this can contain the shotsLeft field which is the amount of ammo the gun currently has.
+ * @param {readonly number[]} chestPos
+ * @param {string} itemName
+ * @param {number} [itemAmount]
+ * @param {PlayerId} [playerId] - The player who is interacting with the chest.
+ * @param {ItemAttributes} [attributes] - An optional object for certain types of item. For guns this can contain the shotsLeft field which is the amount of ammo the gun currently has.
+ * @returns {number}
  */
-giveStandardChestItem(chestPos: readonly number[], itemName: string, itemAmount = 1, playerId?: PlayerId, attributes?: ItemAttributes): number
+giveStandardChestItem(chestPos, itemName, itemAmount, playerId, attributes)
 
 /**
  * Get the amount of free slots in a standard chest
  *
- * @param chestPos
- * @returns number
+ * @param {number[]} chestPos
+ * @returns {number} - number
  */
-getStandardChestFreeSlotCount(chestPos: number[]): number
+getStandardChestFreeSlotCount(chestPos)
 
 /**
  * The amount of an itemName a standard chest has.
  * Returns 0 if the standard chest has none, and a negative number if infinite.
  *
- * @param chestPos
- * @param itemName
- * @returns number
+ * @param {number[]} chestPos
+ * @param {string} itemName
+ * @returns {number} - number
  */
-getStandardChestItemAmount(chestPos: number[], itemName: string): number
+getStandardChestItemAmount(chestPos, itemName)
 
 /**
  * Get the item at a chest slot. Null if empty otherwise format {name: itemName, amount: amountOfItem}
  *
- * @param chestPos
- * @param idx
+ * @param {number[]} chestPos
+ * @param {number} idx
+ * @returns {PNull<InvenItem>}
  */
-getStandardChestItemSlot(chestPos: number[], idx: number): PNull<InvenItem>
+getStandardChestItemSlot(chestPos, idx)
 
 /**
  * Get all the items from a standard chest in order. Use this instead of repetitive calls to getStandardChestItemSlot
  *
- * @param chestPos
+ * @param {number[]} chestPos
+ * @returns {readonly PNull<InvenItem>[]}
  */
-getStandardChestItems(chestPos: number[]): readonly PNull<InvenItem>[]
+getStandardChestItems(chestPos)
 
 /**
- *
- * @param chestPos
- * @param idx 0-indexed
- * @param itemName Can be 'Air', in which case itemAmount will be ignored and the slot will be cleared.
- * @param itemAmount -1 for infinity. Should not be set, or null, for items that are not stackable.
- * @param playerId The player who is interacting with the chest.
- * @param attributes An optional object for certain types of item. For guns this can contain the shotsLeft field which is the amount of ammo the gun currently has.
+ * @param {readonly number[]} chestPos
+ * @param {number} idx - 0-indexed
+ * @param {string} itemName - Can be 'Air', in which case itemAmount will be ignored and the slot will be cleared.
+ * @param {number} [itemAmount] - -1 for infinity. Should not be set, or null, for items that are not stackable.
+ * @param {PlayerId} [playerId] - The player who is interacting with the chest.
+ * @param {ItemAttributes} [attributes] - An optional object for certain types of item. For guns this can contain the shotsLeft field which is the amount of ammo the gun currently has.
+ * @returns {void}
  */
-setStandardChestItemSlot(chestPos: readonly number[], idx: number, itemName: string, itemAmount: number = null, playerId?: PlayerId, attributes?: ItemAttributes): void
+setStandardChestItemSlot(chestPos, idx, itemName, itemAmount, playerId, attributes)
 
 /**
  * Get the item in a player's moonstone chest slot. Null if empty
  *
  * Moonstone chests are a type of chest where a player accesses the same contents no matter the location of the moonstone chest
  *
- * @param playerId
- * @param idx
+ * @param {PlayerId} playerId
+ * @param {number} idx
+ * @returns {PNull<InvenItem>}
  */
-getMoonstoneChestItemSlot(playerId: PlayerId, idx: number): PNull<InvenItem>
+getMoonstoneChestItemSlot(playerId, idx)
 
 /**
  * Get all the items from a moonstone chest in order. Use this instead of repetitive calls to getMoonstoneChestItemSlot
  *
  * Moonstone chests are a type of chest where a player accesses the same contents no matter the location of the moonstone chest
  *
- * @param playerId
+ * @param {PlayerId} playerId
+ * @returns {readonly PNull<InvenItem>[]}
  */
-getMoonstoneChestItems(playerId: PlayerId): readonly PNull<InvenItem>[]
+getMoonstoneChestItems(playerId)
 
 /**
  * Moonstone chests are a type of chest where a player accesses the same contents no matter the location of the moonstone chest
  *
- * @param playerId
- * @param idx 0-indexed
- * @param itemName Can be 'Air', in which case itemAmount will be ignored and the slot will be cleared.
- * @param itemAmount -1 for infinity. Should not be set, or null, for items that are not stackable.
- * @param metadata An optional object for certain types of item. For guns this can contain the shotsLeft field which is the amount of ammo the gun currently has.
+ * @param {PlayerId} playerId
+ * @param {number} idx - 0-indexed
+ * @param {string} itemName - Can be 'Air', in which case itemAmount will be ignored and the slot will be cleared.
+ * @param {number} [itemAmount] - -1 for infinity. Should not be set, or null, for items that are not stackable.
+ * @param {ItemAttributes} [metadata] - An optional object for certain types of item. For guns this can contain the shotsLeft field which is the amount of ammo the gun currently has.
+ * @returns {void}
  */
-setMoonstoneChestItemSlot(playerId: PlayerId, idx: number, itemName: string, itemAmount: number = null, metadata?: ItemAttributes): void
+setMoonstoneChestItemSlot(playerId, idx, itemName, itemAmount, metadata)
 
 /**
  * Get the name of the lobby this game is running in.
+ * @returns {PNull<string>}
  */
-getLobbyName(): PNull<string>
+getLobbyName()
 
 /**
  * Integer lobby names are public
- * @returns boolean
+ * @returns {boolean} - boolean
  */
-isPublicLobby(): boolean
+isPublicLobby()
 
 /**
  * Returns if the current lobby the game is running in is special - e.g. a discord guild or dm, or simply a standard lobby
+ * @returns {LobbyType}
  */
-getLobbyType(): LobbyType
+getLobbyType()
 
 /**
  * Update the progress bar in the bottom right corner.
  * Can be queued.
  *
- * @param playerId
- * @param toFraction The fraction of the progress bar you want to be filled up.
- * @param toDuration The time it takes for the bar to reach the given toFraction in ms.
- * If this is too low and you queue multiple updates, this toFraction could be skipped. Treat 200ms as a minimum.
+ * @param {PlayerId} playerId
+ * @param {number} toFraction - The fraction of the progress bar you want to be filled up.
+ * @param {number} [toDuration] - The time it takes for the bar to reach the given toFraction in ms.
+ * @returns {void}
  */
-progressBarUpdate(playerId: PlayerId, toFraction: number, toDuration = 200): void
+progressBarUpdate(playerId, toFraction, toDuration)
 
 /**
  * Edit the crafting recipes for a player
  *
- * @param playerId
- * @param itemName
- * @param recipesForItem
+ * @param {PlayerId} playerId
+ * @param {ItemName} itemName
+ * @param {RecipesForItem} recipesForItem
+ * @returns {void}
  */
-editItemCraftingRecipes(playerId: PlayerId, itemName: ItemName, recipesForItem: RecipesForItem): void
+editItemCraftingRecipes(playerId, itemName, recipesForItem)
 
 /**
  * Reset the crafting recipes for a given back to its original bloxd state
  *
- * @param playerId
- * @param itemName
+ * @param {PlayerId} playerId
+ * @param {string} itemName
+ * @returns {void}
  */
-resetItemCraftingRecipes(playerId: PlayerId, itemName: string): void
+resetItemCraftingRecipes(playerId, itemName)
 
 /**
  * Check if a position is within a cubic rectangle
  *
- * @param coordsToCheck
- * @param pos1 position of one corner
- * @param pos2 position of opposite corner
- * @param addOneToMax
+ * @param {number[]} coordsToCheck
+ * @param {number[]} pos1 - position of one corner
+ * @param {number[]} pos2 - position of opposite corner
+ * @param {boolean} [addOneToMax]
+ * @returns {boolean}
  */
-isInsideRect(coordsToCheck: number[], pos1: number[], pos2: number[], addOneToMax = false): boolean
+isInsideRect(coordsToCheck, pos1, pos2, addOneToMax)
 
 /**
  * Get the entities in the rect between [minX, minY, minZ] and [maxX, maxY, maxZ]
  *
- * @param minCoords
- * @param maxCoords
- * @returns
+ * @param {number[]} minCoords
+ * @param {number[]} maxCoords
+ * @returns {EntityId[]}
  */
-getEntitiesInRect(minCoords: number[], maxCoords: number[]): EntityId[]
+getEntitiesInRect(minCoords, maxCoords)
 
 /**
- *
- * @param entityId
+ * @param {EntityId} entityId
+ * @returns {EntityType}
  */
-getEntityType(entityId: EntityId): EntityType
+getEntityType(entityId)
 
 /**
  * Create a mob herd. A mob herd represents a collection of mobs that move together.
+ * @returns {MobHerdId}
  */
-createMobHerd(): MobHerdId
+createMobHerd()
 
 /**
  * Try to spawn a mob into the world at a given position. Returns null on failure.
  * WARNING: Either the "onPlayerAttemptSpawnMob" or the "onWorldAttemptSpawnMob" game callback will be called
  * depending on whether "spawnerId" is provided. Calling this function inside those callbacks risks infinite recursion.
- * @param mobType
- * @param x
- * @param y
- * @param z
- * @param opts Includes:
- *  - mobHerdId The ID of this mob's herd. (A mob herd represents a collection of mobs that move together.)
- *  - spawnerId The ID of the player who tried to spawn this mob.
- *  - name If set, gives the mob a name that will be displayed as a nametag above their head.
- *  - playSoundOnSpawn
- *  - variation
+ * @param {TMobType} mobType
+ * @param {number} x
+ * @param {number} y
+ * @param {number} z
+ * @param {Partial<{ mobHerdId: MobHerdId; spawnerId: PlayerId; name: string; playSoundOnSpawn: boolean; variation: MobVariation<TMobType> }>} [opts] - Includes:
+ * @returns {PNull<MobId>}
  */
-attemptSpawnMob<TMobType extends MobType>(mobType: TMobType, x: number, y: number, z: number, opts?: Partial<{ mobHerdId: MobHerdId; spawnerId: PlayerId; name: string; playSoundOnSpawn: boolean; variation: MobVariation<TMobType> }>): PNull<MobId>
+attemptSpawnMob(mobType, x, y, z, opts)
 
 /**
  * Dispose of a mob's state and remove them from the world without triggering "on death" flows.
- * @param mobId
+ * @param {MobId} mobId
+ * @returns {void}
  */
-despawnMob(mobId: MobId): void
+despawnMob(mobId)
 
 /**
  * Get the number of mobs in the world.
+ * @returns {number}
  */
-getNumMobs(): number
+getNumMobs()
 
 /**
  * Get the mob IDs of all mobs in the world.
+ * @returns {MobId[]}
  */
-getMobIds(): MobId[]
+getMobIds()
 
 /**
  * Apply an impulse to an entity
  *
- * @param eId
- * @param xImpulse
- * @param yImpulse
- * @param zImpulse
+ * @param {EntityId} eId
+ * @param {number} xImpulse
+ * @param {number} yImpulse
+ * @param {number} zImpulse
+ * @returns {void}
  */
-applyImpulse(eId: EntityId, xImpulse: number, yImpulse: number, zImpulse: number): void
+applyImpulse(eId, xImpulse, yImpulse, zImpulse)
 
 /**
  * Set the velocity of an entity
  *
- * @param eId
- * @param x
- * @param y
- * @param z
+ * @param {EntityId} eId
+ * @param {number} x
+ * @param {number} y
+ * @param {number} z
+ * @returns {void}
  */
-setVelocity(eId: EntityId, x: number, y: number, z: number): void
+setVelocity(eId, x, y, z)
 
 /**
  * Set the heading for a server-auth entity.
  *
- * @param entityId
- * @param newHeading
+ * @param {EntityId} entityId
+ * @param {number} newHeading
+ * @returns {void}
  */
-setEntityHeading(entityId: EntityId, newHeading: number): void
+setEntityHeading(entityId, newHeading)
 
 /**
  * Spin player in kart
- * @param playerId
- * @param dir direction of spin, 1 for right, -1 for left
- * @param durationInTicks the number of ticks it takes to complete a spin
+ * @param {PlayerId} playerId
+ * @param {number} dir - direction of spin, 1 for right, -1 for left
+ * @param {number} durationInTicks - the number of ticks it takes to complete a spin
+ * @returns {void}
  */
-spinKart(playerId: PlayerId, dir: number, durationInTicks: number): void
+spinKart(playerId, dir, durationInTicks)
 
 /**
  * Set the amount of an item in an item entity
  *
- * @param itemId
- * @param newAmount
+ * @param {EntityId} itemId
+ * @param {number} newAmount
+ * @returns {void}
  */
-setItemAmount(itemId: EntityId, newAmount: number): void
+setItemAmount(itemId, newAmount)
 
 /**
  * Show a message over the shop in the same place that a shop item's onBoughtMessage is shown.
  * Displays for a couple seconds before disappearing
  * Use case is to show a dynamic message when player buys an item
  *
- * @param playerId
- * @param info
+ * @param {PlayerId} playerId
+ * @param {string | CustomTextStyling} info
+ * @returns {void}
  */
-sendOverShopInfo(playerId: PlayerId, info: string | CustomTextStyling): void
+sendOverShopInfo(playerId, info)
 
 /**
  * Open the shop UI for a player
  *
- * @param playerId
- * @param toggle Whether to close the shop if it's already open
- * @param forceCategory If set, will change the shop to this category
+ * @param {PlayerId} playerId
+ * @param {boolean} [toggle] - Whether to close the shop if it's already open
+ * @param {string} [forceCategory] - If set, will change the shop to this category
+ * @returns {void}
  */
-openShop(playerId: PlayerId, toggle = false, forceCategory: string = null): void
+openShop(playerId, toggle, forceCategory)
 
 /**
- * Apply an effect to a player.
+ * Apply an effect to a lifeform.
  * Can be an inbuilt effect E.g. "Speed" (speed boost), "Damage" (damage boost).
  * For inbuilt just pass the name of the effect and the functionality is handled in-engine.
  * For custom effect, you pass customEffectInfo. The icon can be an icon from "IngameIcons.ts" or a bloxd item name.
  * The custom effect onEndCb is an optional helper within which you can undo the effect you applied.
  *
- * @param playerId
- * @param effectName
- * @param duration
- * @param customEffectInfo (onEndCb will not work for press to code boards and code blocks)
+ * @param {LifeformId} lifeformId
+ * @param {string} effectName
+ * @param {number | null} duration
+ * @param {{ icon?: IngameIconName | ItemName; onEndCb?: () => void; displayName?: string | TranslatedText } & Partial<InbuiltEffectInfo>} customEffectInfo - (onEndCb will not work for press to code boards, code blocks or world code)
+ * @returns {void}
  */
-applyEffect(playerId: PlayerId, effectName: string, duration: number | null, customEffectInfo: { icon?: IngameIconName | ItemName; onEndCb?: () => void; displayName?: string | TranslatedText } & Partial<InbuiltEffectInfo>): void
+applyEffect(lifeformId, effectName, duration, customEffectInfo)
 
 /**
- * Get all the effects currently applied to a player
+ * Get all the effects currently applied to a lifeform.
  *
- * @param playerId
+ * @param {LifeformId} lifeformId
+ * @returns {string[]}
  */
-getEffects(playerId: PlayerId): string[]
+getEffects(lifeformId)
 
 /**
- * Remove an effect from a player.
+ * Remove an effect from a lifeform.
  *
- * @param playerId
- * @param name
+ * @param {LifeformId} lifeformId
+ * @param {string} name
+ * @returns {void}
  */
-removeEffect(playerId: PlayerId, name: string): void
+removeEffect(lifeformId, name)
 
 /**
  * Change a part of a player's skin
- * @param playerId
- * @param partType
- * @param selected
+ * @param {PlayerId} playerId
+ * @param {CustomisationPart} partType
+ * @param {string} selected
+ * @returns {void}
  */
-changePlayerIntoSkin(playerId: PlayerId, partType: CustomisationPart, selected: string): void
+changePlayerIntoSkin(playerId, partType, selected)
 
 /**
  * Remove gamemode-applied skin from a player
- * @param playerId
+ * @param {PlayerId} playerId
+ * @returns {void}
  */
-removeAppliedSkin(playerId: PlayerId): void
+removeAppliedSkin(playerId)
 
 /**
  * Scale node of a player's mesh by 3d vector.
  * State from prior calls to this api is lost so if you want to have multiple nodes scaled, pass in all the scales at once.
  *
- * @param playerId
- * @param nodeScales
+ * @param {PlayerId} playerId
+ * @param {EntityMeshScalingMap} nodeScales
+ * @returns {void}
  */
-scalePlayerMeshNodes(playerId: PlayerId, nodeScales: EntityMeshScalingMap): void
+scalePlayerMeshNodes(playerId, nodeScales)
 
 /**
- *  Attach/detach mesh instances to/from an entity
- *  @param eId
- *  @param node node to attach to
- *  @param type if null, detaches mesh from this node
- *  @param opts
- *  @param offset
- *  @param rotation
+ * Attach/detach mesh instances to/from an entity
+ * @param {EntityId} eId
+ * @param {EntityNamedNode} node - node to attach to
+ * @param {PNull<MeshType>} type - if null, detaches mesh from this node
+ * @param {MeshEntityOpts[MeshType]} [opts]
+ * @param {number[]} [offset]
+ * @param {number[]} [rotation]
+ * @returns {void}
  */
-updateEntityNodeMeshAttachment<MeshType extends MeshEntityType>(eId: EntityId, node: EntityNamedNode, type: PNull<MeshType>, opts?: MeshEntityOpts[MeshType], offset: number[] = [0, 0, 0], rotation = [0, 0, 0]): void
+updateEntityNodeMeshAttachment(eId, node, type, opts, offset, rotation)
 
 /**
  * Set the pose of the player
- * @param playerId
- * @param pose
+ * @param {PlayerId} playerId
+ * @param {PlayerPose} pose
+ * @returns {void}
  */
-setPlayerPose(playerId: PlayerId, pose: PlayerPose): void
+setPlayerPose(playerId, pose)
 
 /**
  * Set physics state of player (vehicle type and tier)
- * @param playerId
- * @param physicsState
+ * @param {PlayerId} playerId
+ * @param {PlayerPhysicsStateData} physicsState
+ * @returns {void}
  */
-setPlayerPhysicsState(playerId: PlayerId, physicsState: PlayerPhysicsStateData): void
+setPlayerPhysicsState(playerId, physicsState)
 
 /**
  * Get physics state for player
- * @param playerId
+ * @param {PlayerId} playerId
+ * @returns {PlayerPhysicsStateData}
  */
-getPlayerPhysicsState(playerId: PlayerId): PlayerPhysicsStateData
+getPlayerPhysicsState(playerId)
 
 /**
  * Add following entity to player
- * @param playerId
- * @param eId
- * @param offset
+ * @param {PlayerId} playerId
+ * @param {EntityId} eId
+ * @param {number[]} [offset]
+ * @returns {void}
  */
-addFollowingEntityToPlayer(playerId: PlayerId, eId: EntityId, offset?: number[]): void
+addFollowingEntityToPlayer(playerId, eId, offset)
 
 /**
  * Remove following entity from player
- * @param playerId
- * @param entityEId
+ * @param {PlayerId} playerId
+ * @param {EntityId} entityEId
+ * @returns {void}
  */
-removeFollowingEntityFromPlayer(playerId: PlayerId, entityEId: EntityId): void
+removeFollowingEntityFromPlayer(playerId, entityEId)
 
 /**
  * Set camera zoom for a player
- * @param playerId
- * @param zoom
+ * @param {PlayerId} playerId
+ * @param {number} zoom
+ * @returns {void}
  */
-setCameraZoom(playerId: PlayerId, zoom: number): void
+setCameraZoom(playerId, zoom)
 
 /**
- *
- *
- * @param playerId hears the sound
- * @param soundName Can also be a prefix. If so, a random sound with that prefix will be played
- * @param volume 0-1. If it's too quiet and volume is 1, normalise your sound in audacity
- * @param rate The speed of playback. Also affects pitch. 0.5-4. Lower playback = lower pitch
- *        Good for varying the sound. E.g. item pickup sound has a random rate between 1 and 1.5
- * @param posSettings
- * {playerIdOrPos: PlayerId | number[], maxHearDist: number, refDistance: number}
- * playerIdOrPos: The player the sound originates from, or the position of the sound
- * maxHearDist: sound is not played if player is further than this. Default 15
- * refDistance: higher means the sound decreases less in volume with distance. Default 3. Hitting is 4. Guns are 10
- *
+ * @param {PlayerId} playerId - hears the sound
+ * @param {string} soundName - Can also be a prefix. If so, a random sound with that prefix will be played
+ * @param {number} volume - 0-1. If it's too quiet and volume is 1, normalise your sound in audacity
+ * @param {number} rate - The speed of playback. Also affects pitch. 0.5-4. Lower playback = lower pitch
+ * @param {{
+ *     playerIdOrPos: PlayerId | number[]
+ *     maxHearDist?: number
+ *     refDistance?: number
+ * }} [posSettings]
+ * @returns {void}
  */
-playSound(playerId: PlayerId, soundName: string, volume: number, rate: number, posSettings?: {
-    playerIdOrPos: PlayerId | number[]
-    maxHearDist?: number
-    refDistance?: number
-}): void
+playSound(playerId, soundName, volume, rate, posSettings)
 
-// See documentation for api.playSound
-broadcastSound(soundName: string, volume: number, rate: number, posSettings?: {
-    playerIdOrPos: PlayerId | number[]
-    maxHearDist?: number
-    refDistance?: number
-}, exceptPlayerId: PlayerId = null): void
+/**
+ * See documentation for api.playSound
+ * @param {string} soundName
+ * @param {number} volume
+ * @param {number} rate
+ * @param {{
+ *     playerIdOrPos: PlayerId | number[]
+ *     maxHearDist?: number
+ *     refDistance?: number
+ * }} [posSettings]
+ * @param {PlayerId} [exceptPlayerId]
+ * @returns {void}
+ */
+broadcastSound(soundName, volume, rate, posSettings, exceptPlayerId)
 
-// See documentation for api.playSound
-playClientPredictedSound(soundName: string, volume: number, rate: number, posSettings?: {
-    playerIdOrPos: PlayerId | number[]
-    maxHearDist?: number
-    refDistance?: number
-}, predictedBy?: PlayerId): void
+/**
+ * See documentation for api.playSound
+ * @param {string} soundName
+ * @param {number} volume
+ * @param {number} rate
+ * @param {{
+ *     playerIdOrPos: PlayerId | number[]
+ *     maxHearDist?: number
+ *     refDistance?: number
+ * }} [posSettings]
+ * @param {PlayerId} [predictedBy]
+ * @returns {void}
+ */
+playClientPredictedSound(soundName, volume, rate, posSettings, predictedBy)
 
-
-calcExplosionForce(eId: EntityId, explosionType: ExplosionType, knockbackFactor: number, explosionRadius: number, explosionPos: number[], ignoreProjectiles: boolean): { force: Pos; forceFrac: number; }
+/**
+ * @param {EntityId} eId
+ * @param {ExplosionType} explosionType
+ * @param {number} knockbackFactor
+ * @param {number} explosionRadius
+ * @param {number[]} explosionPos
+ * @param {boolean} ignoreProjectiles
+ * @returns {{ force: Pos; forceFrac: number; }}
+ */
+calcExplosionForce(eId, explosionType, knockbackFactor, explosionRadius, explosionPos, ignoreProjectiles)
 
 /**
  * Get the position of a player's target block and the block adjacent to it (e.g. where a block would be placed)
@@ -1296,40 +1480,44 @@ calcExplosionForce(eId: EntityId, explosionType: ExplosionType, knockbackFactor:
  * This normally doesn't matter but if you are client predicting something based on noa.targetedBlock
  * (currently only applicable to in-engine code), you should not verify using this
  *
- * @param playerId
+ * @param {PlayerId} playerId
+ * @returns {{ position: Pos; normal: Pos; adjacent: Pos }}
  */
-getPlayerTargetInfo(playerId: PlayerId): { position: Pos; normal: Pos; adjacent: Pos }
+getPlayerTargetInfo(playerId)
 
 /**
  * Get the position of a player's camera and the direction (both in Euclidean and spherical coordinates) they are attempting to use an item.
  * The camPos has the same limitations described in getPlayerTargetInfo
  *
- * @param playerId
+ * @param {PlayerId} playerId
+ * @returns {{ camPos: Pos; dir: Pos; angleDir: AngleDir; moveHeading: number }}
  */
-getPlayerFacingInfo(playerId: PlayerId): { camPos: Pos; dir: Pos; angleDir: AngleDir; moveHeading: number }
+getPlayerFacingInfo(playerId)
 
 /**
  * Raycast for a block in the world.
  * Given a position and a direction, find the first block that the "ray" hits.
  *
- * @param fromPos
- * @param dirVec
+ * @param {number[]} fromPos
+ * @param {number[]} dirVec
+ * @returns {BlockRaycastResult}
  */
-raycastForBlock(fromPos: number[], dirVec: number[]): BlockRaycastResult
+raycastForBlock(fromPos, dirVec)
 
 /**
  * Check whether a player is crouching
  *
- * @param playerId
+ * @param {PlayerId} playerId
+ * @returns {boolean}
  */
-isPlayerCrouching(playerId: PlayerId): boolean
+isPlayerCrouching(playerId)
 ```
 
 ## Glossary of Referenced Types
 
 These 'types' can't be referenced by your code, but they help explain some of the parameters in the API.
 
-```ts
+```js
 type CustomTextStyling = (string | EntityName | TranslatedText | StyledIcon | StyledText)[]
 
 type EntityMeshScalingMap = { [key in "TorsoNode" | "HeadMesh" | "ArmRightMesh" | "ArmLeftMesh" | "LegLeftMesh" | "LegRightMesh"]?: number[] }

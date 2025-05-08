@@ -25,37 +25,37 @@ To use a callback, just assign a function to it in the world code!
 tick = () => {}			 or			 function tick() {}
 ```
 
-```ts
+```js
 /**
  * Called every tick, 20 times per second
  * @param dt - The time since the last tick in milliseconds
  */
-tick: (dt) => {}
+tick = (dt) => {}
 
 /**
  * Called when the lobby is shutting down
  * @param serverIsShuttingDown - Whether the server is shutting down
  */
-onClose: (serverIsShuttingDown) => {}
+onClose = (serverIsShuttingDown) => {}
 
 /**
  * Called when a player joins the lobby
  * @param playerId - The id of the player that joined
  */
-onPlayerJoin: (playerId) => {}
+onPlayerJoin = (playerId) => {}
 
 /**
  * Called when a player leaves the lobby
  * @param playerId - The id of the player that left
  * @param serverIsShuttingDown - Whether the server is shutting down
  */
-onPlayerLeave: (playerId, serverIsShuttingDown) => {}
+onPlayerLeave = (playerId, serverIsShuttingDown) => {}
 
 /**
  * Called when a player jumps
  * @param playerId - The id of the player that jumped
  */
-onPlayerJump: (playerId) => {}
+onPlayerJump = (playerId) => {}
 
 /**
  * Called when a player requests to respawn.
@@ -65,30 +65,30 @@ onPlayerJump: (playerId) => {}
  * as they could pick up their old items or hit the player they were fighting).
  * @param playerId - The id of the player that requested to respawn
  */
-onRespawnRequest: (playerId) => {}
+onRespawnRequest = (playerId) => {}
 
 /**
  * Called when a player sends a command
  * @param playerId - The id of the player that sent the command
  * @param command - The command that the player sent
  */
-playerCommand: (playerId, command) => {
+playerCommand = (playerId, command) => {
     return false
 }
 
 /**
  * Called when a player sends a chat message
- * Return false to prevent the broadcast of the message.
- * Return CustomTextStyling to add a prefix to message.
+ * Return false or null to prevent the broadcast of the message.
+ * Return CustomTextStyling to add a prefix to message, doesn't work for world code.
  * Return for most flexibility: an object where keys are playerIds -
  * the value for a playerId being false means that player won't receive the message.
  * Otherwise playerId values should be an object with (optional) keys
  * prefixContent and chatContent to modify the prefix and the chat.
- * @param playerId - The id of the player that sent the message
- * @param chatMessage - The message that the player sent
- * @param channelName - The name of the channel that the message was sent in
+ * @param {PlayerId} playerId - The id of the player that sent the message
+ * @param {string} chatMessage - The message that the player sent
+ * @param {string} [channelName] - The name of the channel that the message was sent in
  */
-onPlayerChat: (playerId: PlayerId, chatMessage: string, channelName?: string) => {
+onPlayerChat = (playerId, chatMessage, channelName) => {
     return true
 }
 
@@ -99,113 +99,107 @@ onPlayerChat: (playerId: PlayerId, chatMessage: string, channelName?: string) =>
  * If a player breaks a block, toBlock will be Air.
  * Return "preventDrop" to prevent a block item from dropping.
  * Return an array to set the dropped item position.
+ * @param {PlayerId} playerId - The id of the player that changed the block
+ * @param {number} x - The x coordinate of the block that was changed
+ * @param {number} y - The y coordinate of the block that was changed
+ * @param {number} z - The z coordinate of the block that was changed
+ * @param {BlockName} fromBlock - The old block that was replaced
+ * @param {BlockName} toBlock - The new block that was placed
+ * @param {BlockName | null} droppedItem - The item that was dropped
+ * @param {MultiBlockInfo} fromBlockInfo - The info of the old block that was replaced
+ * @param {MultiBlockInfo} toBlockInfo - The info of the new block that was placed
  */
-onPlayerChangeBlock: (
-    playerId: PlayerId, // The id of the player that changed the block
-    x: number, // The x coordinate of the block that was changed
-    y: number, // The y coordinate of the block that was changed
-    z: number, // The z coordinate of the block that was changed
-    fromBlock: BlockName, // The old block that was replaced
-    toBlock: BlockName, // The new block that was placed
-    droppedItem: BlockName | null, // The item that was dropped
-    fromBlockInfo: MultiBlockInfo, // The info of the old block that was replaced
-    toBlockInfo: MultiBlockInfo, // The info of the new block that was placed
-) => {}
+onPlayerChangeBlock = (playerId, x, y, z, fromBlock, toBlock, droppedItem, fromBlockInfo, toBlockInfo) => {}
 
 /**
  * Called when a player drops an item
  * Return "preventDrop" to prevent the player from dropping the item at all.
  * Return "allowButNoDroppedItemCreated" to allow discarding items without dropping them.
+ * @param {PlayerId} playerId - The id of the player that dropped the item
+ * @param {number} x - The x coordinate of the item that was dropped
+ * @param {number} y - The y coordinate of the item that was dropped
+ * @param {number} z - The z coordinate of the item that was dropped
+ * @param {ItemName} itemName - The name of the item that was dropped
+ * @param {number} itemAmount - The amount of the item that was dropped
+ * @param {number} fromIdx - The index of the item that was dropped from the player's inventory
  */
-onPlayerDropItem: (
-    playerId: PlayerId, // The id of the player that dropped the item
-    x: number, // The x coordinate of the item that was dropped
-    y: number, // The y coordinate of the item that was dropped
-    z: number, // The z coordinate of the item that was dropped
-    itemName: ItemName, // The name of the item that was dropped
-    itemAmount: number, // The amount of the item that was dropped
-    fromIdx: number, // The index of the item that was dropped from the player's inventory
-) => {}
+onPlayerDropItem = (playerId, x, y, z, itemName, itemAmount, fromIdx) => {}
 
 /**
  * Called when a player picks up an item
- * @param playerId - The id of the player that picked up the item
- * @param itemName - The name of the item that was picked up
- * @param itemAmount - The amount of the item that was picked up
+ * @param {PlayerId} playerId - The id of the player that picked up the item
+ * @param {string} itemName - The name of the item that was picked up
+ * @param {number} itemAmount - The amount of the item that was picked up
  */
-onPlayerPickedUpItem: (playerId: PlayerId, itemName: string, itemAmount: number) => {}
+onPlayerPickedUpItem = (playerId, itemName, itemAmount) => {}
 
 /**
  * Called when a player selects a different inventory slot.
  * This will be called eventually when you have already set the slot using
  * api.setSelectedInventorySlotI so be careful not to cause an infinite loop doing this.
- * @param playerId - The id of the player that selected the inventory slot
- * @param slotIndex - The index of the inventory slot that was selected
+ * @param {PlayerId} playerId - The id of the player that selected the inventory slot
+ * @param {number} slotIndex - The index of the inventory slot that was selected
  */
-onPlayerSelectInventorySlot: (playerId: PlayerId, slotIndex: number) => {}
+onPlayerSelectInventorySlot = (playerId, slotIndex) => {}
 
 /**
  * Called when a player stands on a block
+ * @param {PlayerId} playerId - The id of the player that stood on the block
+ * @param {number} x - The x coordinate of the block that was stood on
+ * @param {number} y - The y coordinate of the block that was stood on
+ * @param {number} z - The z coordinate of the block that was stood on
+ * @param {BlockName} blockName - The name of the block that was stood on
  */
-onBlockStand: (
-    playerId: PlayerId, // The id of the player that stood on the block
-    x: number, // The x coordinate of the block that was stood on
-    y: number, // The y coordinate of the block that was stood on
-    z: number, // The z coordinate of the block that was stood on
-    blockName: BlockName, // The name of the block that was stood on
-) => {}
+onBlockStand = (playerId, x, y, z, blockName) => {}
 
 /**
  * Called when a player attempts to craft an item
  * Return "preventCraft" to prevent a craft from happening
- * @param playerId - The id of the player that is attempting to craft the item
- * @param itemName - The name of the item that is being crafted
- * @param craftingIdx - The index of the used recipe in the item's recipe list
+ * @param {PlayerId} playerId - The id of the player that is attempting to craft the item
+ * @param {string} itemName - The name of the item that is being crafted
+ * @param {number} craftingIdx - The index of the used recipe in the item's recipe list
  */
-onPlayerAttemptCraft: (playerId: PlayerId, itemName: string, craftingIdx: number) => {}
+onPlayerAttemptCraft = (playerId, itemName, craftingIdx) => {}
 
 /**
  * Called when a player crafts an item
- * @param playerId - The id of the player that crafted the item
- * @param itemName - The name of the item that was crafted
- * @param craftingIdx - The index of the used recipe in the item's recipe list
+ * @param {PlayerId} playerId - The id of the player that crafted the item
+ * @param {string} itemName - The name of the item that was crafted
+ * @param {number} craftingIdx - The index of the used recipe in the item's recipe list
  */
-onPlayerCraft: (playerId: PlayerId, itemName: string, craftingIdx: number) => {}
+onPlayerCraft = (playerId, itemName, craftingIdx) => {}
 
 /**
  * Called when a player attempts to open a chest
  * Return "preventOpen" to prevent the player from opening the chest
+ * @param {PlayerId} playerId - The id of the player that is attempting to open the chest
+ * @param {number} x - The x coordinate of the chest that the player is attempting to open
+ * @param {number} y - The y coordinate of the chest that the player is attempting to open
+ * @param {number} z - The z coordinate of the chest that the player is attempting to open
+ * @param {boolean} isMoonstoneChest - Whether the chest is a moonstone chest
  */
-onPlayerAttemptOpenChest: (
-    playerId: PlayerId, // The id of the player that is attempting to open the chest
-    x: number, // The x coordinate of the chest that the player is attempting to open
-    y: number, // The y coordinate of the chest that the player is attempting to open
-    z: number, // The z coordinate of the chest that the player is attempting to open
-    isMoonstoneChest: boolean, // Whether the chest is a moonstone chest
-) => {}
+onPlayerAttemptOpenChest = (playerId, x, y, z, isMoonstoneChest) => {}
 
 /**
  * Called when a player opens a chest
+ * @param {PlayerId} playerId - The id of the player that opened the chest
+ * @param {number} x - The x coordinate of the chest that was opened
+ * @param {number} y - The y coordinate of the chest that was opened
+ * @param {number} z - The z coordinate of the chest that was opened
+ * @param {boolean} isMoonstoneChest - Whether the chest is a moonstone chest
  */
-onPlayerOpenedChest: (
-    playerId: PlayerId, // The id of the player that opened the chest
-    x: number, // The x coordinate of the chest that was opened
-    y: number, // The y coordinate of the chest that was opened
-    z: number, // The z coordinate of the chest that was opened
-    isMoonstoneChest: boolean, // Whether the chest is a moonstone chest
-) => {}
+onPlayerOpenedChest = (playerId, x, y, z, isMoonstoneChest) => {}
 
 /**
  * Called when a player moves an item out of their inventory
  * Return "preventChange" to prevent the movement
+ * @param {PlayerId} playerId - The id of the player moving the item
+ * @param {string} itemName - The name of the item being moved
+ * @param {number} itemAmount - The amount of the item being moved
+ * @param {number} fromIdx - The index which the item is being moved from
+ * @param {string} movementType - The type of movement that occurred
  */
-onPlayerMoveItemOutOfInventory: (
-    playerId: PlayerId, // The id of the player moving the item
-    itemName: string, // The name of the item being moved
-    itemAmount: number, // The amount of the item being moved
-    fromIdx: number, // The index which the item is being moved from
-    movementType: string, // The type of movement that occurred
-) => {}
+onPlayerMoveItemOutOfInventory = (playerId, itemName, itemAmount, fromIdx, movementType) => {}
 
 /**
  * Called for all types of inventory item movement.
@@ -213,195 +207,188 @@ onPlayerMoveItemOutOfInventory: (
  * into multiple slots. (e.g. shift-click).
  * toStartIdx and toEndIdx provide the min and max idxs moved into.
  * Return "preventChange" to prevent item movement.
+ * @param {PlayerId} playerId - The id of the player moving the item
+ * @param {number} fromIdx - The index that the item is being moved from
+ * @param {number} toStartIdx - The start index that the item is being moved into
+ * @param {number} toEndIdx - The end index that the item is being moved into
+ * @param {number} amt - The amount of the item being moved
  */
-onPlayerMoveInvenItem: (
-    playerId: PlayerId, // The id of the player moving the item
-    fromIdx: number, // The index that the item is being moved from
-    toStartIdx: number, // The start index that the item is being moved into
-    toEndIdx: number, // The end index that the item is being moved into
-    amt: number, // The amount of the item being moved
-) => {}
+onPlayerMoveInvenItem = (playerId, fromIdx, toStartIdx, toEndIdx, amt) => {}
 
 /**
  * Called when a player moves an item into an index within a range of inventory slots
  * Return "preventChange" to prevent the movement
+ * @param {PlayerId} playerId - The id of the player moving the item
+ * @param {number} start - The start index of the range
+ * @param {number} end - The end index of the range
+ * @param {number} moveIdx - The index of the item being moved
+ * @param {number} itemAmount - The amount of the item being moved
  */
-onPlayerMoveItemIntoIdxs: (
-    playerId: PlayerId, // The id of the player moving the item
-    start: number, // The start index of the range
-    end: number, // The end index of the range
-    moveIdx: number, // The index of the item being moved
-    itemAmount: number, // The amount of the item being moved
-) => {}
+onPlayerMoveItemIntoIdxs = (playerId, start, end, moveIdx, itemAmount) => {}
 
 /**
  * Return "preventChange" to prevent the swap
- * @param playerId - The id of the player swapping the inventory slots
- * @param i - The index of the first slot
- * @param j - The index of the second slot
+ * @param {PlayerId} playerId - The id of the player swapping the inventory slots
+ * @param {number} i - The index of the first slot
+ * @param {number} j - The index of the second slot
  */
-onPlayerSwapInvenSlots: (playerId: PlayerId, i: number, j: number) => {}
+onPlayerSwapInvenSlots = (playerId, i, j) => {}
 
 /**
  * Return "preventChange" to prevent the movement
- * @param playerId - The id of the player moving the item
- * @param i - The index of the first slot
- * @param j - The index of the second slot
- * @param amt - The amount of the item being moved
+ * @param {PlayerId} playerId - The id of the player moving the item
+ * @param {number} i - The index of the first slot
+ * @param {number} j - The index of the second slot
+ * @param {number} amt - The amount of the item being moved
  */
-onPlayerMoveInvenItemWithAmt: (playerId: PlayerId, i: number, j: number, amt: number) => {}
+onPlayerMoveInvenItemWithAmt = (playerId, i, j, amt) => {}
 
 /**
  * Called when player alt actions (right click on pc).
  * The co-ordinates will be undefined if there is no targeted block (and block will be "Air")
+ * Some actions can be prevented by returning "preventAction",
+ * but this may not work as well for certain actions which the game client predicts to succeed -
+ * test it to see if it works for your use case, feel free to report any broken ones.
+ * @param {PlayerId} playerId - The id of the player attempting the alt action
+ * @param {number} x - The x coordinate of the targeted block
+ * @param {number} y - The y coordinate of the targeted block
+ * @param {number} z - The z coordinate of the targeted block
+ * @param {BlockName} block - The name of the targeted block
+ * @param {EntityId | null} targetEId - The id of the targeted entity
  */
-onPlayerAttemptAltAction: (
-    playerId: PlayerId, // The id of the player attempting the alt action
-    x: number, // The x coordinate of the targeted block
-    y: number, // The y coordinate of the targeted block
-    z: number, // The z coordinate of the targeted block
-    block: BlockName, // The name of the targeted block
-    targetEId: EntityId | null, // The id of the targeted entity
-) => {}
+onPlayerAttemptAltAction = (playerId, x, y, z, block, targetEId) => {}
 
 /**
  * Called when player completes an alt action (right click on pc).
  * The co-ordinates will be undefined if there is no targeted block (and block will be "Air")
+ * @param {PlayerId} playerId - The id of the player completing the alt action
+ * @param {number} x - The x coordinate of the targeted block
+ * @param {number} y - The y coordinate of the targeted block
+ * @param {number} z - The z coordinate of the targeted block
+ * @param {BlockName} block - The name of the targeted block
+ * @param {EntityId | null} targetEId - The id of the targeted entity
  */
-onPlayerAltAction: (
-    playerId: PlayerId, // The id of the player completing the alt action
-    x: number, // The x coordinate of the targeted block
-    y: number, // The y coordinate of the targeted block
-    z: number, // The z coordinate of the targeted block
-    block: BlockName, // The name of the targeted block
-    targetEId: EntityId | null, // The id of the targeted entity
-) => {}
+onPlayerAltAction = (playerId, x, y, z, block, targetEId) => {}
 
 /**
  * Called when a player clicks
  * Don't have important functionality depending on wasAltClick,
  * as it'll always be false for touchscreen players.
+ * @param {PlayerId} playerId - The id of the player clicking
+ * @param {boolean} wasAltClick - Whether the click was an alt click (e.g. right click
  */
-onPlayerClick: (
-    playerId: PlayerId, // The id of the player clicking
-    wasAltClick: boolean, // Whether the click was an alt click (e.g. right click)
-) => {}
+onPlayerClick = (playerId, wasAltClick) => {}
 
 /**
  * Called when a client option is updated
- * @param playerId - The id of the player whose option was updated
- * @param option - The option that was updated
- * @param value - The new value of the option
+ * @param {PlayerId} playerId - The id of the player whose option was updated
+ * @param {ClientOption} option - The option that was updated
+ * @param {any} value - The new value of the option
  */
-onClientOptionUpdated: (playerId: PlayerId, option: ClientOption, value: any) => {}
+onClientOptionUpdated = (playerId, option, value) => {}
 
 /**
  * Called when a player's inventory is updated
- * @param playerId - The id of the player whose inventory was updated
+ * @param {PlayerId} playerId - The id of the player whose inventory was updated
  */
-onInventoryUpdated: (playerId: PlayerId) => {}
+onInventoryUpdated = (playerId) => {}
 
 /**
  * Called when a chest is updated by a player
  * x, y, z, will be null if isMoonstoneChest is true
+ * @param {PlayerId} initiatorEId - The id of the player who updated the chest
+ * @param {boolean} isMoonstoneChest - Whether the chest is a moonstone chest
+ * @param {number | null} x - The x coordinate of the chest
+ * @param {number | null} y - The y coordinate of the chest
+ * @param {number | null} z - The z coordinate of the chest
  */
-onChestUpdated: (
-    initiatorEId: PlayerId, // The id of the player who updated the chest
-    isMoonstoneChest: boolean, // Whether the chest is a moonstone chest
-    x: number | null, // The x coordinate of the chest
-    y: number | null, // The y coordinate of the chest
-    z: number | null, // The z coordinate of the chest
-) => {}
+onChestUpdated = (initiatorEId, isMoonstoneChest, x, y, z) => {}
 
 /**
  * Called when a block is changed in the world
  * initiatorDbId is null if updated by game code e.g. when a sapling grows
  * Return "preventChange" to prevent change
  * Return "preventDrop" to prevent a block item from dropping
+ * @param {number} x - The x coordinate of the block
+ * @param {number} y - The y coordinate of the block
+ * @param {number} z - The z coordinate of the block
+ * @param {BlockName} fromBlock - The old block that was replaced
+ * @param {BlockName} toBlock - The new block that was placed
+ * @param {string | null} initiatorDbId - The id of the player who updated the block
  */
-onWorldChangeBlock: (
-    x: number, // The x coordinate of the block
-    y: number, // The y coordinate of the block
-    z: number, // The z coordinate of the block
-    fromBlock: BlockName, // The old block that was replaced
-    toBlock: BlockName, // The new block that was placed
-    initiatorDbId: string | null, // The id of the player who updated the block
-) => {}
+onWorldChangeBlock = (x, y, z, fromBlock, toBlock, initiatorDbId) => {}
 
 /**
  * Called when a mesh entity is created
- * @param eId - The id of the mesh entity
- * @param type - The type of mesh entity
+ * @param {EntityId} eId - The id of the mesh entity
+ * @param {string} type - The type of mesh entity
  */
-onCreateBloxdMeshEntity: (eId: EntityId, type: string) => {}
+onCreateBloxdMeshEntity = (eId, type) => {}
 
 /**
  * Called when a entity collides with another entity
- * @param eId - The id of the entity
- * @param otherEId - The id of the other entity
+ * @param {EntityId} eId - The id of the entity
+ * @param {EntityId} otherEId - The id of the other entity
  */
-onEntityCollision: (eId: EntityId, otherEId: EntityId) => {}
+onEntityCollision = (eId, otherEId) => {}
 
 /**
  * Called when a player attempts to spawn a mob, e.g. using a spawn orb.
  * Return "preventSpawn" to prevent the mob from spawning.
+ * @param {PlayerId} playerId - The id of the player
+ * @param {MobType} mobType - The type of mob
+ * @param {number} x - The potential x coordinate of the mob
+ * @param {number} y - The potential y coordinate of the mob
+ * @param {number} z - The potential z coordinate of the mob
  */
-onPlayerAttemptSpawnMob: (
-    playerId: PlayerId, // The id of the player
-    mobType: MobType, // The type of mob
-    x: number, // The potential x coordinate of the mob
-    y: number, // The potential y coordinate of the mob
-    z: number, // The potential z coordinate of the mob
-) => {}
+onPlayerAttemptSpawnMob = (playerId, mobType, x, y, z) => {}
 
 /**
  * Called when the world attempts to spawn a mob.
  * Return "preventSpawn" to prevent the mob from spawning.
- * @param mobType - The type of mob
- * @param x - The potential x coordinate of the mob
- * @param y - The potential y coordinate of the mob
- * @param z - The potential z coordinate of the mob
+ * @param {MobType} mobType - The type of mob
+ * @param {number} x - The potential x coordinate of the mob
+ * @param {number} y - The potential y coordinate of the mob
+ * @param {number} z - The potential z coordinate of the mob
  */
-onWorldAttemptSpawnMob: (mobType: MobType, x: number, y: number, z: number) => {}
+onWorldAttemptSpawnMob = (mobType, x, y, z) => {}
 
 /**
  * Called when a mob is spawned by a player
+ * @param {PlayerId} playerId - The id of the player who spawned the mob
+ * @param {MobId} mobId - The id of the mob
+ * @param {MobType} mobType - The type of mob
+ * @param {number} x - The x coordinate of the mob
+ * @param {number} y - The y coordinate of the mob
+ * @param {number} z - The z coordinate of the mob
+ * @param {MobHerdId} mobHerdId - The herd id of the mob
+ * @param {boolean} playSoundOnSpawn - Whether to play a sound on spawn
  */
-onPlayerSpawnMob: (
-    playerId: PlayerId, // The id of the player who spawned the mob
-    mobId: MobId, // The id of the mob
-    mobType: MobType, // The type of mob
-    x: number, // The x coordinate of the mob
-    y: number, // The y coordinate of the mob
-    z: number, // The z coordinate of the mob
-    mobHerdId: MobHerdId, // The herd id of the mob
-    playSoundOnSpawn: boolean, // Whether to play a sound on spawn
-) => {}
+onPlayerSpawnMob = (playerId, mobId, mobType, x, y, z, mobHerdId, playSoundOnSpawn) => {}
 
 /**
  * Called when a mob is spawned by the world
+ * @param {MobId} mobId - The id of the mob
+ * @param {MobType} mobType - The type of mob
+ * @param {number} x - The x coordinate of the mob
+ * @param {number} y - The y coordinate of the mob
+ * @param {number} z - The z coordinate of the mob
+ * @param {MobHerdId} mobHerdId - The herd id of the mob
+ * @param {boolean} playSoundOnSpawn - Whether to play a sound on spawn
  */
-onWorldSpawnMob: (
-    mobId: MobId, // The id of the mob
-    mobType: MobType, // The type of mob
-    x: number, // The x coordinate of the mob
-    y: number, // The y coordinate of the mob
-    z: number, // The z coordinate of the mob
-    mobHerdId: MobHerdId, // The herd id of the mob
-    playSoundOnSpawn: boolean, // Whether to play a sound on spawn
-) => {}
+onWorldSpawnMob = (mobId, mobType, x, y, z, mobHerdId, playSoundOnSpawn) => {}
 
 /**
  * Called when a mob is despawned
- * @param mobId - The id of the mob despawned
+ * @param {MobId} mobId - The id of the mob despawned
  */
-onMobDespawned: (mobId: MobId) => {}
+onMobDespawned = (mobId) => {}
 
 /**
  * Called when a player attacks another player
  * @param playerId - The id of the player attacking
  */
-onPlayerAttack: (playerId) => {}
+onPlayerAttack = (playerId) => {}
 
 /**
  * Called when a player is damaging another player
@@ -410,43 +397,47 @@ onPlayerAttack: (playerId) => {}
  * Sometimes the damager will have left the game (e.g. spikes placer);
  * in this case, attackingPlayer will be the damagedPlayer,
  * but we pass damagerDbId for use cases where it's important.
+ * @param {PlayerId} attackingPlayer - The id of the player attacking
+ * @param {PlayerId} damagedPlayer - The id of the player being damaged
+ * @param {number} damageDealt - The amount of damage dealt
+ * @param {string} withItem - The item used to attack
+ * @param {PlayerBodyPart} bodyPartHit - The body part hit
+ * @param {PlayerDbId} damagerDbId - The database id of the player attacking
  */
-onPlayerDamagingOtherPlayer: (
-    attackingPlayer: PlayerId, // The id of the player attacking
-    damagedPlayer: PlayerId, // The id of the player being damaged
-    damageDealt: number, // The amount of damage dealt
-    withItem: string, // The item used to attack
-    bodyPartHit: PlayerBodyPart, // The body part hit
-    damagerDbId: PlayerDbId, // The database id of the player attacking
-) => {}
+onPlayerDamagingOtherPlayer = (attackingPlayer, damagedPlayer, damageDealt, withItem, bodyPartHit, damagerDbId) => {}
 
 /**
  * Called when a player is damaging a mob
+ * Return "preventDamage" to prevent damage
+ * Return number to change damage dealt to that amount
+ * @param {PlayerId} playerId - The id of the player damaging the mob
+ * @param {MobId} mobId - The id of the mob being damaged
+ * @param {number} damageDealt - The amount of damage dealt
+ * @param {string} withItem - The item used to attack
  */
-onPlayerDamagingMob: (
-    playerId: PlayerId, // The id of the player damaging the mob
-    mobId: MobId, // The id of the mob being damaged
-    damageDealt: number, // The amount of damage dealt
-    withItem: string, // The item used to attack
-) => {}
+onPlayerDamagingMob = (playerId, mobId, damageDealt, withItem) => {}
 
 /**
  * Called when a mob is damaging a player
- * @param attackingMob the id of the mob damaging the player
- * @param damagedPlayer the id of the player being damaged
- * @param damageDealt  the amount of damage dealt
- * @param withItem the item used to attack
+ * Return "preventDamage" to prevent damage
+ * Return number to change damage dealt to that amount
+ * @param {MobId} attackingMob
+ * @param {PlayerId} damagedPlayer
+ * @param {number} damageDealt
+ * @param {string} withItem
  */
-onMobDamagingPlayer: (attackingMob: MobId, damagedPlayer: PlayerId, damageDealt: number, withItem: string) => {}
+onMobDamagingPlayer = (attackingMob, damagedPlayer, damageDealt, withItem) => {}
 
 /**
  * Called when a mob is damaging another mob
- * @param attackingMob the id of the mob attacking
- * @param damagedMob the id of the mob being damaged
- * @param damageDealt the amount of damage dealt
- * @param withItem the item used to attack
+ * Return "preventDamage" to prevent damage
+ * Return number to change damage dealt to that amount
+ * @param {MobId} attackingMob
+ * @param {MobId} damagedMob
+ * @param {number} damageDealt
+ * @param {string} withItem
  */
-onMobDamagingOtherMob: (attackingMob: MobId, damagedMob: MobId, damageDealt: number, withItem: string) => {}
+onMobDamagingOtherMob = (attackingMob, damagedMob, damageDealt, withItem) => {}
 
 /**
  * Called when a player kills another player
@@ -456,7 +447,7 @@ onMobDamagingOtherMob: (attackingMob: MobId, damagedMob: MobId, damageDealt: num
  * @param damageDealt - The amount of damage dealt
  * @param withItem - The item used to attack
  */
-onPlayerKilledOtherPlayer: (attackingPlayer, killedPlayer, damageDealt, withItem) => {}
+onPlayerKilledOtherPlayer = (attackingPlayer, killedPlayer, damageDealt, withItem) => {}
 
 /**
  * Called when a mob kills a player
@@ -466,28 +457,27 @@ onPlayerKilledOtherPlayer: (attackingPlayer, killedPlayer, damageDealt, withItem
  * @param damageDealt - The amount of damage dealt
  * @param withItem - The item used to attack
  */
-onMobKilledPlayer: (attackingMob, killedPlayer, damageDealt, withItem) => {}
+onMobKilledPlayer = (attackingMob, killedPlayer, damageDealt, withItem) => {}
 
 /**
  * Called when a mob kills a player
  * Return "preventDrop" to prevent the mob from dropping items
+ * @param {PlayerId} playerId - The id of the player killed
+ * @param {MobId} mobId - The id of the mob that killed the player
+ * @param {number} damageDealt - The amount of damage dealt
+ * @param {string} withItem - The item used to attack
  */
-onPlayerKilledMob: (
-    playerId: PlayerId, // The id of the player killed
-    mobId: MobId, // The id of the mob that killed the player
-    damageDealt: number, // The amount of damage dealt
-    withItem: string, // The item used to attack
-) => {}
+onPlayerKilledMob = (playerId, mobId, damageDealt, withItem) => {}
 
 /**
  * Called when a mob kills another mob
  * Return "preventDrop" to prevent the mob from dropping items
- * @param attackingMob - The id of the mob attacking
- * @param killedMob - The id of the mob killed
- * @param damageDealt - The amount of damage dealt
- * @param withItem - The item used to attack
+ * @param {MobId} attackingMob - The id of the mob attacking
+ * @param {MobId} killedMob - The id of the mob killed
+ * @param {number} damageDealt - The amount of damage dealt
+ * @param {string} withItem - The item used to attack
  */
-onMobKilledOtherMob: (attackingMob: MobId, killedMob: MobId, damageDealt: number, withItem: string) => {}
+onMobKilledOtherMob = (attackingMob, killedMob, damageDealt, withItem) => {}
 
 /**
  * Called when a player is affected by a new potion effect
@@ -495,51 +485,48 @@ onMobKilledOtherMob: (attackingMob: MobId, killedMob: MobId, damageDealt: number
  * @param targetId - The id of the player who has started being affected
  * @param effectName - The name of the potion effect
  */
-onPlayerPotionEffect: (initiatorId, targetId, effectName) => {}
+onPlayerPotionEffect = (initiatorId, targetId, effectName) => {}
 
 /**
  * Called when a player is damaging a mesh entity
+ * @param {PlayerId} playerId - The id of the player damaging the mesh entity
+ * @param {EntityId} damagedId - The id of the mesh entity being damaged
+ * @param {number} damageDealt - The amount of damage dealt
+ * @param {string} withItem - The item used to attack
  */
-onPlayerDamagingMeshEntity: (
-    playerId: PlayerId, // The id of the player damaging the mesh entity
-    damagedId: EntityId, // The id of the mesh entity being damaged
-    damageDealt: number, // The amount of damage dealt
-    withItem: string, // The item used to attack
-) => {}
+onPlayerDamagingMeshEntity = (playerId, damagedId, damageDealt, withItem) => {}
 
 /**
  * Called when a player breaks a mesh entity
- * @param playerId - The id of the player breaking the mesh entity
- * @param entityId - The id of the mesh entity being broken
+ * @param {PlayerId} playerId - The id of the player breaking the mesh entity
+ * @param {EntityId} entityId - The id of the mesh entity being broken
  */
-onPlayerBreakMeshEntity: (playerId: PlayerId, entityId: EntityId) => {}
+onPlayerBreakMeshEntity = (playerId, entityId) => {}
 
 /**
  * Called when a player uses a throwable item
+ * @param {PlayerId} playerId - The id of the player using the throwable item
+ * @param {ThrowableItem} throwableName - The name of the throwable item
+ * @param {EntityId} thrownEntityId - The id of the projectile created by the player
  */
-onPlayerUsedThrowable: (
-    playerId: PlayerId, // The id of the player using the throwable item
-    throwableName: ThrowableItem, // The name of the throwable item
-    thrownEntityId: EntityId, // The id of the projectile created by the player
-) => {}
+onPlayerUsedThrowable = (playerId, throwableName, thrownEntityId) => {}
 
 /**
  * Called when a player's thrown projectile hits the terrain
+ * @param {PlayerId} playerId - The id of the player that threw the throwable item
+ * @param {ThrowableItem} throwableName - The name of the throwable item
+ * @param {EntityId} thrownEntityId - The id of the entity which hit the terrain
  */
-onPlayerThrowableHitTerrain: (
-    playerId: PlayerId, // The id of the player that threw the throwable item
-    throwableName: ThrowableItem, // The name of the throwable item
-    thrownEntityId: EntityId, // The id of the entity which hit the terrain
-) => {}
+onPlayerThrowableHitTerrain = (playerId, throwableName, thrownEntityId) => {}
 
 /**
  * Set client option `touchscreenActionButton` to take effect
  * Called when a player presses the touchscreen action button
  * Called for both touchDown and touchUp
- * @param playerId - The id of the player pressing the touchscreen action button
- * @param touchDown - Whether the touchscreen action button was pressed or released
+ * @param {PlayerId} playerId - The id of the player pressing the touchscreen action button
+ * @param {boolean} touchDown - Whether the touchscreen action button was pressed or released
  */
-onTouchscreenActionButton: (playerId: PlayerId, touchDown: boolean) => {}
+onTouchscreenActionButton = (playerId, touchDown) => {}
 
 /**
  * Called when a player claims a task
@@ -548,56 +535,52 @@ onTouchscreenActionButton: (playerId: PlayerId, touchDown: boolean) => {}
  * @param isPromoTask - Whether the task is a promo task
  * @param claimedRewards - The rewards claimed by the player
  */
-onTaskClaimed: (playerId, taskId, isPromoTask, claimedRewards) => {}
+onTaskClaimed = (playerId, taskId, isPromoTask, claimedRewards) => {}
 
 /**
  * Called when a chunk is first loaded
- * @param chunkId - The id of the chunk being loaded
- * @param chunk - The chunk being loaded, which can be modified by this callback
- * For world code callbacks this value will always be null.
- * @param wasPersistedChunk - Whether the chunk was persisted
+ * @param {string} chunkId - The id of the chunk being loaded
+ * @param {LoadedChunk} chunk - The chunk being loaded, which can be modified by this callback
+ * @param {boolean} wasPersistedChunk - Whether the chunk was persisted
  */
-onChunkLoaded: (chunkId: string, chunk: LoadedChunk, wasPersistedChunk: boolean) => {}
+onChunkLoaded = (chunkId, chunk, wasPersistedChunk) => {}
 
 /**
  * Called when a player requests a chunk
+ * @param {PlayerId} playerId - The id of the player requesting the chunk
+ * @param {number} chunkX - The x coordinate of the chunk being requested
+ * @param {number} chunkY - The y coordinate of the chunk being requested
+ * @param {number} chunkZ - The z coordinate of the chunk being requested
+ * @param {string} chunkId - The id of the chunk being requested
  */
-onPlayerRequestChunk: (
-    playerId: PlayerId, // The id of the player requesting the chunk
-    chunkX: number, // The x coordinate of the chunk being requested
-    chunkY: number, // The y coordinate of the chunk being requested
-    chunkZ: number, // The z coordinate of the chunk being requested
-    chunkId: string, // The id of the chunk being requested
-) => {}
+onPlayerRequestChunk = (playerId, chunkX, chunkY, chunkZ, chunkId) => {}
 
 /**
  * Called when an item drop is created
+ * @param {EntityId} itemEId - The id of the item drop
+ * @param {string} itemName - The name of the item dropped
+ * @param {number} itemAmount - The amount dropped
+ * @param {number} x - The x coordinate of the item drop
+ * @param {number} y - The y coordinate of the item drop
+ * @param {number} z - The z coordinate of the item drop
  */
-onItemDropCreated: (
-    itemEId: EntityId, // The id of the item drop
-    itemName: string, // The name of the item dropped
-    itemAmount: number, // The amount dropped
-    x: number, // The x coordinate of the item drop
-    y: number, // The y coordinate of the item drop
-    z: number, // The z coordinate of the item drop
-) => {}
+onItemDropCreated = (itemEId, itemName, itemAmount, x, y, z) => {}
 
 /**
  * Called when a player starts charging an item
- * @param playerId - The id of the player charging the item
- * @param itemName - The name of the item being charged
+ * @param {PlayerId} playerId - The id of the player charging the item
+ * @param {string} itemName - The name of the item being charged
  */
-onPlayerStartChargingItem: (playerId: PlayerId, itemName: string) => {}
+onPlayerStartChargingItem = (playerId, itemName) => {}
 
 /**
  * Called when a player finishes charging an item
+ * @param {PlayerId} playerId - The id of the player charging the item
+ * @param {boolean} used - Whether the item was used
+ * @param {string} itemName - The name of the charged item
+ * @param {number} duration - The duration of the charge
  */
-onPlayerFinishChargingItem: (
-    playerId: PlayerId, // The id of the player charging the item
-    used: boolean, // Whether the item was used
-    itemName: string, // The name of the charged item
-    duration: number, // The duration of the charge
-) => {}
+onPlayerFinishChargingItem = (playerId, used, itemName, duration) => {}
 
 /**
  * Called every so often.
@@ -605,5 +588,5 @@ onPlayerFinishChargingItem: (
  * Persisted items ARE saved on graceful shutdown (e.g. uncaught error, update, etc),
  * but this helps prevent large data-loss on non-graceful shutdowns.
  */
-doPeriodicSave: () => {}
+doPeriodicSave = () => {}
 ```
