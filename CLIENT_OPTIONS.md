@@ -403,7 +403,7 @@ splashPotionEffectDuration = 8000
 arrowPotionEffectDuration = 6000
 
 /**
- * Duration of arrow potion effects
+ * After dying the player can respawn after this many seconds
  * @type {number}
  */
 secsToRespawn = 3
