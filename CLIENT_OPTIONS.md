@@ -51,13 +51,19 @@ Here is the full list of available client options:
 canChange = true
 
 /**
- * Speed multiplier for the player
+ * Speed multiplier for the player.
+ * Players are used to the default bloxd movement behaviour and speed,
+ * and may be put off from your game if different muscle memory is required.
+ * We suggest applying speed or slowness effects instead, using api.applyEffect.
  * @type {number}
  */
 speedMultiplier = 1
 
 /**
- * Speed multiplier for the player when crouching
+ * Speed multiplier for the player when crouching.
+ * Players are used to the default bloxd movement behaviour and speed,
+ * and may be put off from your game if different muscle memory is required.
+ * We suggest applying speed or slowness effects instead, using api.applyEffect.
  * @type {number}
  */
 crouchingSpeed = 2
@@ -505,31 +511,47 @@ droppedItemScale = 1
 movementBasedFovScale = 1
 
 /**
- * Amount of friction to apply to airborne players - only change if absolutely necessary i.e. Rocket Obby uses 0
+ * Amount of friction to apply to airborne players.
+ * Only change if absolutely necessary i.e. Rocket Obby uses 0.
+ * Players are used to the default bloxd movement behaviour and speed,
+ * and may be put off from your game if different muscle memory is required.
+ * We suggest applying speed or slowness effects instead, using api.applyEffect.
  * @type {number}
  */
 airFrictionScale = 1
 
 /**
- * Amount of friction to apply to grounded players - only change if absolutely necessary i.e. Rocket Obby uses 3
+ * Amount of friction to apply to grounded players.
+ * Only change if absolutely necessary i.e. Rocket Obby uses 3.
+ * Players are used to the default bloxd movement behaviour and speed,
+ * and may be put off from your game if different muscle memory is required.
+ * We suggest applying speed or slowness effects instead, using api.applyEffect.
  * @type {number}
  */
 groundFrictionScale = 1
 
 /**
- * Amount of acceleration to apply to airborne players - only change if absolutely necessary i.e. Rocket Obby uses 0.25
+ * Amount of acceleration to apply to airborne players.
+ * Only change if absolutely necessary i.e. Rocket Obby uses 0.25.
+ * Players are used to the default bloxd movement behaviour and speed,
+ * and may be put off from your game if different muscle memory is required.
+ * We suggest applying speed or slowness effects instead, using api.applyEffect.
  * @type {number}
  */
 airAccScale = 1
 
 /**
- * Whether to allow the player to strafe and conserve momentum while airborne
+ * Whether to allow the player to strafe and conserve momentum while airborne.
+ * Only change if absolutely necessary i.e. only Rocket Obby uses true.
+ * Players are used to the default bloxd movement behaviour and speed,
+ * and may be put off from your game if different muscle memory is required.
+ * We suggest applying speed or slowness effects instead, using api.applyEffect.
  * @type {boolean}
  */
 airMomentumConservation = false
 
 /**
- * Whether to deal damage the player when they fall
+ * Whether to deal damage to the player when they fall
  * @type {boolean}
  */
 fallDamage = false

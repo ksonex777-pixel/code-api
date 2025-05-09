@@ -1216,6 +1216,41 @@ attemptSpawnMob(mobType, x, y, z, opts)
 despawnMob(mobId)
 
 /**
+ * Returns the current default value for a mob setting.
+ *
+ * @param {TMobType} mobType
+ * @param {TMobSetting} setting
+ * @returns {MobSettings<TMobType>[TMobSetting]}
+ */
+getDefaultMobSetting(mobType, setting)
+
+/**
+ * Set the default value for a mob setting.
+ * @param {TMobType} mobType
+ * @param {TMobSetting} setting
+ * @param {MobSettings<TMobType>[TMobSetting]} value
+ * @returns {void}
+ */
+setDefaultMobSetting(mobType, setting, value)
+
+/**
+ * Get the current value of a mob setting for a specific mob.
+ * @param {MobId} mobId
+ * @param {TMobSetting} setting
+ * @returns {MobSettings<MobType>[TMobSetting]}
+ */
+getMobSetting(mobId, setting)
+
+/**
+ * Set the current value of a mob setting for a specific mob.
+ * @param {MobId} mobId
+ * @param {TMobSetting} setting
+ * @param {MobSettings<MobType>[TMobSetting]} value
+ * @returns {void}
+ */
+setMobSetting(mobId, setting, value)
+
+/**
  * Get the number of mobs in the world.
  * @returns {number}
  */
