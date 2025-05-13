@@ -118,7 +118,7 @@ lobbyLeaderboardValues = {}
  * The name tag info of the player:
  * {
  *     backgroundColor?: string
- *     content?: (StyledText | RankInfo)[]
+ *     content?: StyledText[]
  *     subtitle?: StyledText[]
  *     subtitleBackgroundColor?: string
  * }

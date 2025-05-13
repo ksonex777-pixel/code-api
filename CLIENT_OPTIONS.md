@@ -105,12 +105,6 @@ musicVolumeLevel = 0.6
 skyBox = "default"
 
 /**
- * Size of region around player where chunks are loaded
- * @type {number}
- */
-minChunkAddDist = 2
-
-/**
  * Whether to show the player in unloaded chunks
  * @type {boolean}
  */

@@ -1646,4 +1646,10 @@ type TranslatedText = {
 
 type ItemAttributes = { customDisplayName?: string; customDescription?: string; customAttributes?: Record<string, any> }
 
+enum WalkThroughType {
+    CANT_WALK_THROUGH = 0,
+    CAN_WALK_THROUGH = 1,
+    DEFAULT_WALK_THROUGH = 2,
+}
+
 ```
