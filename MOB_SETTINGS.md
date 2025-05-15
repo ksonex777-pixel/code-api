@@ -69,7 +69,7 @@ idleSound = "pigOink"
 attackSound = null
 
 /**
- * @type {{ itemName: string; probabilityOfDrop: number; dropMinAmount: number; dropMaxAmount: number; }[]}
+ * @type { { itemName: string; probabilityOfDrop: number; dropMinAmount: number; dropMaxAmount: number; }[] }
  */
 onDeathItemDrops = [
     {
@@ -84,6 +84,11 @@ onDeathItemDrops = [
  * @type {string}
  */
 onDeathParticleTexture = "critical_hit"
+
+/**
+ * @type {number}
+ */
+onDeathAura = 20
 
 /**
  * @type {number}

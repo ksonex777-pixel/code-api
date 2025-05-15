@@ -166,8 +166,9 @@ onPlayerAttemptCraft = (playerId, itemName, craftingIdx) => {}
  * @param {PlayerId} playerId - The id of the player that crafted the item
  * @param {string} itemName - The name of the item that was crafted
  * @param {number} craftingIdx - The index of the used recipe in the item's recipe list
+ * @param {RecipesForItem[number]} recipe - The recipe that was used to craft the item
  */
-onPlayerCraft = (playerId, itemName, craftingIdx) => {}
+onPlayerCraft = (playerId, itemName, craftingIdx, recipe) => {}
 
 /**
  * Called when a player attempts to open a chest

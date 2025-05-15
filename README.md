@@ -224,7 +224,7 @@ getHealth(entityId)
 /**
  * @param {LifeformId} lifeformId
  * @param {number} changeAmount - Must be an integer. A positive amount will increase the entity's health. A negative amount will decrease the entity's shield first, then their health.
- * @param {LifeformId | { lifeformId: LifeformId; withItem: string }} [whoDidDamage] - Optional - If damage done by another player
+ * @param { LifeformId | { lifeformId: LifeformId; withItem: string } } [whoDidDamage] - Optional - If damage done by another player
  * @param {boolean} [broadcastLifeformHurt]
  * @returns {boolean} - Whether the entity was killed
  */
@@ -236,7 +236,7 @@ applyHealthChange(lifeformId, changeAmount, whoDidDamage, broadcastLifeformHurt)
  *
  * @param {EntityId} entityId
  * @param {PNull<number>} newHealth - Can be null to make the player not have health
- * @param {LifeformId | { lifeformId: LifeformId; withItem: string }} [whoDidDamage] - Optional
+ * @param { LifeformId | { lifeformId: LifeformId; withItem: string } } [whoDidDamage] - Optional
  * @param {boolean} [increaseMaxHealthIfNeeded] - Optional
  * @returns {boolean} - Whether this change in health killed the player
  */
@@ -305,7 +305,7 @@ forceRespawn(playerId, respawnPos)
 /**
  * Kill a lifeform.
  * @param {LifeformId} lifeformId
- * @param {LifeformId | { lifeformId: LifeformId; withItem: string }} [whoKilled] - Optional
+ * @param { LifeformId | { lifeformId: LifeformId; withItem: string } } [whoKilled] - Optional
  * @returns {void}
  */
 killLifeform(lifeformId, whoKilled)
@@ -338,7 +338,7 @@ isAlive(lifeformId)
  * Send a message to everyone
  *
  * @param {string | CustomTextStyling} message - The text contained within the message. Can use `Custom Text Styling`.
- * @param {{ fontWeight?: number | string; color?: string }} [style] - An optional style argument. Can contain values for fontWeight and color of the message.
+ * @param { { fontWeight?: number | string; color?: string } } [style] - An optional style argument. Can contain values for fontWeight and color of the message.
  * @returns {void}
  */
 broadcastMessage(message, style)
@@ -348,7 +348,7 @@ broadcastMessage(message, style)
  *
  * @param {PlayerId} playerId - Id of the player
  * @param {string | CustomTextStyling} message - The text contained within the message. Can use `Custom Text Styling`.
- * @param {{ fontWeight?: number | string; color?: string }} [style] - An optional style argument. Can contain values for fontWeight and color of the message.
+ * @param { { fontWeight?: number | string; color?: string } } [style] - An optional style argument. Can contain values for fontWeight and color of the message.
  * @returns {void}
  */
 sendMessage(playerId, message, style)
@@ -672,7 +672,7 @@ chunkIdToBotLeftCoord(chunkId)
  * @param {PlayerId} playerId
  * @param {string} icon - Can be any icon from font-awesome.
  * @param {string} text - The text to send.
- * @param {{
+ * @param { {
  *     duration?: number
  *     width?: number
  *     height?: number
@@ -680,7 +680,7 @@ chunkIdToBotLeftCoord(chunkId)
  *     iconSizeMult?: number
  *     textAndIconColor?: string
  *     fontSize?: string
- * }} opts - Can include keys duration, width, height, color, iconSizeMult.
+ * } } opts - Can include keys duration, width, height, color, iconSizeMult.
  * @returns {void}
  */
 sendTopRightHelper(playerId, icon, text, opts)
@@ -691,6 +691,19 @@ sendTopRightHelper(playerId, icon, text, opts)
  * @returns {boolean}
  */
 isMobile(playerId)
+
+/**
+ * Create a dropped item.
+ * @param {number} x
+ * @param {number} y
+ * @param {number} z
+ * @param {string} name - Name of the item. Valid names can be found in blockMetadata.ts and itemMetadata.ts
+ * @param {PNull<number>} [amount] - The amount of the item to include in the drop - so when the player picks up the item drop, they get this many of the item.
+ * @param {boolean} [mergeItems] - Whether to merge the item into an nearby item of same type, if one exists. Defaults to false.
+ * @param {ItemAttributes} [attributes] - Attributes of the item being dropped
+ * @returns {PNull<EntityId>} - the id you can pass to setCantPickUpItem, or null if the item drop limit was reached
+ */
+createItemDrop(x, y, z, name, amount, mergeItems, attributes)
 
 /**
  * Prevent a player from picking up an item. itemId returned by createItemDrop
@@ -1038,9 +1051,10 @@ giveStandardChestItem(chestPos, itemName, itemAmount, playerId, attributes)
 
 /**
  * Get the amount of free slots in a standard chest
+ * Returns null for non-chests
  *
  * @param {number[]} chestPos
- * @returns {number} - number
+ * @returns {PNull<number>} - number
  */
 getStandardChestFreeSlotCount(chestPos)
 
@@ -1342,7 +1356,7 @@ openShop(playerId, toggle, forceCategory)
  * @param {LifeformId} lifeformId
  * @param {string} effectName
  * @param {number | null} duration
- * @param {{ icon?: IngameIconName | ItemName; onEndCb?: () => void; displayName?: string | TranslatedText } & Partial<InbuiltEffectInfo>} customEffectInfo - (onEndCb will not work for press to code boards, code blocks or world code)
+ * @param { { icon?: IngameIconName | ItemName; onEndCb?: () => void; displayName?: string | TranslatedText } & Partial<InbuiltEffectInfo> } customEffectInfo - (onEndCb will not work for press to code boards, code blocks or world code)
  * @returns {void}
  */
 applyEffect(lifeformId, effectName, duration, customEffectInfo)
@@ -1455,11 +1469,11 @@ setCameraZoom(playerId, zoom)
  * @param {string} soundName - Can also be a prefix. If so, a random sound with that prefix will be played
  * @param {number} volume - 0-1. If it's too quiet and volume is 1, normalise your sound in audacity
  * @param {number} rate - The speed of playback. Also affects pitch. 0.5-4. Lower playback = lower pitch
- * @param {{
+ * @param { {
  *     playerIdOrPos: PlayerId | number[]
  *     maxHearDist?: number
  *     refDistance?: number
- * }} [posSettings]
+ * } } [posSettings]
  * @returns {void}
  */
 playSound(playerId, soundName, volume, rate, posSettings)
@@ -1469,11 +1483,11 @@ playSound(playerId, soundName, volume, rate, posSettings)
  * @param {string} soundName
  * @param {number} volume
  * @param {number} rate
- * @param {{
+ * @param { {
  *     playerIdOrPos: PlayerId | number[]
  *     maxHearDist?: number
  *     refDistance?: number
- * }} [posSettings]
+ * } } [posSettings]
  * @param {PlayerId} [exceptPlayerId]
  * @returns {void}
  */
@@ -1484,11 +1498,11 @@ broadcastSound(soundName, volume, rate, posSettings, exceptPlayerId)
  * @param {string} soundName
  * @param {number} volume
  * @param {number} rate
- * @param {{
+ * @param { {
  *     playerIdOrPos: PlayerId | number[]
  *     maxHearDist?: number
  *     refDistance?: number
- * }} [posSettings]
+ * } } [posSettings]
  * @param {PlayerId} [predictedBy]
  * @returns {void}
  */
@@ -1501,7 +1515,7 @@ playClientPredictedSound(soundName, volume, rate, posSettings, predictedBy)
  * @param {number} explosionRadius
  * @param {number[]} explosionPos
  * @param {boolean} ignoreProjectiles
- * @returns {{ force: Pos; forceFrac: number; }}
+ * @returns { { force: Pos; forceFrac: number; } }
  */
 calcExplosionForce(eId, explosionType, knockbackFactor, explosionRadius, explosionPos, ignoreProjectiles)
 
@@ -1516,7 +1530,7 @@ calcExplosionForce(eId, explosionType, knockbackFactor, explosionRadius, explosi
  * (currently only applicable to in-engine code), you should not verify using this
  *
  * @param {PlayerId} playerId
- * @returns {{ position: Pos; normal: Pos; adjacent: Pos }}
+ * @returns { { position: Pos; normal: Pos; adjacent: Pos } }
  */
 getPlayerTargetInfo(playerId)
 
@@ -1525,7 +1539,7 @@ getPlayerTargetInfo(playerId)
  * The camPos has the same limitations described in getPlayerTargetInfo
  *
  * @param {PlayerId} playerId
- * @returns {{ camPos: Pos; dir: Pos; angleDir: AngleDir; moveHeading: number }}
+ * @returns { { camPos: Pos; dir: Pos; angleDir: AngleDir; moveHeading: number } }
  */
 getPlayerFacingInfo(playerId)
 
@@ -1546,6 +1560,37 @@ raycastForBlock(fromPos, dirVec)
  * @returns {boolean}
  */
 isPlayerCrouching(playerId)
+
+/**
+ * Get the aura info for a player
+ * @param {PlayerId} playerId
+ * @returns { { level: number; totalAura: number; auraPerLevel: number } }
+ */
+getAuraInfo(playerId)
+
+/**
+ * Sets the total aura for a player. Will not go over max level or under 0
+ * @param {PlayerId} playerId
+ * @param {number} totalAura
+ * @returns {void}
+ */
+setTotalAura(playerId, totalAura)
+
+/**
+ * Set the aura level for a player - shortcut for setTotalAura(level * auraPerLevel)
+ * @param {PlayerId} playerId
+ * @param {number} level
+ * @returns {void}
+ */
+setAuraLevel(playerId, level)
+
+/**
+ * Add (or remove if negative) aura to a player. Will not go over max level or under 0
+ * @param {PlayerId} playerId
+ * @param {number} auraDiff
+ * @returns {number} - The actual change in aura
+ */
+applyAuraChange(playerId, auraDiff)
 ```
 
 ## Glossary of Referenced Types
@@ -1565,7 +1610,7 @@ type EntityName = {
     }
 }
 
-type IngameIconName = "Damage" | "Damage Reduction" | "Speed" | "VoidJump" | "Fist" | "Frozen" | "Hydrated" | "Invisible" | "Jump Boost" | "Poisoned" | "Slowness" | "Weakness" | "Health Regen" | "Haste" | "Heat Resistance" | "Gliding" | "Boating" | "Obsidian Boating" | "Bunny Hop" | "FallDamage" | "Feather Falling"
+type IngameIconName = "Damage" | "Damage Reduction" | "Speed" | "VoidJump" | "Fist" | "Frozen" | "Hydrated" | "Invisible" | "Jump Boost" | "Poisoned" | "Slowness" | "Weakness" | "Health Regen" | "Haste" | "Heat Resistance" | "Gliding" | "Boating" | "Obsidian Boating" | "Bunny Hop" | "FallDamage" | "Feather Falling" | "Damage Enchantment" | "Critical Damage Enchantment" | "Attack Speed Enchantment" | "Protection Enchantment" | "Health Enchantment" | "Health Regen Enchantment"
 
 enum ParticleSystemBlendMode {
     // Source color is added to the destination color without alpha affecting the result
@@ -1584,6 +1629,7 @@ type RecipesForItem = {
     requires: { items: string[]; amt: number }[]
     produces: number
     station?: string | string[]
+    onCraftedAura?: number
 }[]
 
 type StyledIcon = {

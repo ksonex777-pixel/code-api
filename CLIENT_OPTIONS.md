@@ -100,7 +100,7 @@ musicVolumeLevel = 0.6
 
 /**
  * Not recommended to use anything other than "default" as client FPS can drop while loading the skybox
- * @type {string | { type: "earth"; inclination?: number; turbidity?: number; infiniteDistance?: number; luminance?: number; yCameraOffset?: number; azimuth?: number; vertexTint?: [number, number, number]; }}
+ * @type { string | { type: "earth"; inclination?: number; turbidity?: number; infiniteDistance?: number; luminance?: number; yCameraOffset?: number; azimuth?: number; vertexTint?: [number, number, number]; } }
  */
 skyBox = "default"
 
@@ -272,7 +272,7 @@ showKillfeed = true
 
 /**
  * Allows player to select a channel that is passed as argument to onPlayerChat. See SharedTypes.ts for expected format
- * @type {{ channelName: string; elementContent: string | CustomTextStyling; elementBgColor: string; }[]}
+ * @type { { channelName: string; elementContent: string | CustomTextStyling; elementBgColor: string; }[] }
  */
 chatChannels = null
 
