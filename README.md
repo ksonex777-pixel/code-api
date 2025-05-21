@@ -20,7 +20,7 @@ Please use [our discord](https://discord.gg/vwMp5y25RX) to report any issues you
 
 ## Notes
 
-- Global variable `myId` stores the PlayerID of who is running the code.
+- Global variable `myId` stores the player ID of who is running the code.
 - Global variable `thisPos` stores the position of the currently executing code block or press to code board.
 - You can use `api.log` or `console.log` for printing and debugging (they do the same thing).
 - You can use `Date.now()` instead of `api.now()` if you prefer, both return the time in milliseconds.
@@ -1217,13 +1217,21 @@ createMobHerd()
  * @param {number} x
  * @param {number} y
  * @param {number} z
- * @param {Partial<{ mobHerdId: MobHerdId; spawnerId: PlayerId; name: string; playSoundOnSpawn: boolean; variation: MobVariation<TMobType> }>} [opts] - Includes:
+ * @param {Partial<{
+ *     mobHerdId: MobHerdId
+ *     spawnerId: PlayerId
+ *     mobDbId: MobDbId
+ *     name: string
+ *     playSoundOnSpawn: boolean
+ *     variation: MobVariation<TMobType>
+ *     }>} [opts] - Includes:
  * @returns {PNull<MobId>}
  */
 attemptSpawnMob(mobType, x, y, z, opts)
 
 /**
  * Dispose of a mob's state and remove them from the world without triggering "on death" flows.
+ * Always succeeds.
  * @param {MobId} mobId
  * @returns {void}
  */
@@ -1352,11 +1360,12 @@ openShop(playerId, toggle, forceCategory)
  * For inbuilt just pass the name of the effect and the functionality is handled in-engine.
  * For custom effect, you pass customEffectInfo. The icon can be an icon from "IngameIcons.ts" or a bloxd item name.
  * The custom effect onEndCb is an optional helper within which you can undo the effect you applied.
+ * Note that onEndCb will not work for press to code boards, code blocks or world code.
  *
  * @param {LifeformId} lifeformId
  * @param {string} effectName
  * @param {number | null} duration
- * @param { { icon?: IngameIconName | ItemName; onEndCb?: () => void; displayName?: string | TranslatedText } & Partial<InbuiltEffectInfo> } customEffectInfo - (onEndCb will not work for press to code boards, code blocks or world code)
+ * @param { { icon?: IngameIconName | ItemName; onEndCb?: () => void; displayName?: string | TranslatedText } & Partial<InbuiltEffectInfo> } customEffectInfo
  * @returns {void}
  */
 applyEffect(lifeformId, effectName, duration, customEffectInfo)

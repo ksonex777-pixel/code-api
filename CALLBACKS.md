@@ -10,12 +10,13 @@ onPlayerAttemptCraft onPlayerCraft onPlayerAttemptOpenChest
 onPlayerOpenedChest onPlayerMoveItemOutOfInventory onPlayerMoveInvenItem
 onPlayerMoveItemIntoIdxs onPlayerSwapInvenSlots onPlayerMoveInvenItemWithAmt
 onPlayerAttemptAltAction onPlayerAltAction onPlayerClick
-onClientOptionUpdated onInventoryUpdated onChestUpdated onWorldChangeBlock
-onCreateBloxdMeshEntity onEntityCollision onPlayerAttemptSpawnMob
-onWorldAttemptSpawnMob onPlayerSpawnMob onWorldSpawnMob onMobDespawned
-onPlayerAttack onPlayerDamagingOtherPlayer onPlayerDamagingMob
-onMobDamagingPlayer onMobDamagingOtherMob onPlayerKilledOtherPlayer
-onMobKilledPlayer onPlayerKilledMob onMobKilledOtherMob onPlayerPotionEffect
+onClientOptionUpdated onMobSettingUpdated onInventoryUpdated onChestUpdated
+onWorldChangeBlock onCreateBloxdMeshEntity onEntityCollision
+onPlayerAttemptSpawnMob onWorldAttemptSpawnMob onPlayerSpawnMob
+onWorldSpawnMob onWorldAttemptDespawnMob onMobDespawned onPlayerAttack
+onPlayerDamagingOtherPlayer onPlayerDamagingMob onMobDamagingPlayer
+onMobDamagingOtherMob onPlayerKilledOtherPlayer onMobKilledPlayer
+onPlayerKilledMob onMobKilledOtherMob onPlayerPotionEffect
 onPlayerDamagingMeshEntity onPlayerBreakMeshEntity onPlayerUsedThrowable
 onPlayerThrowableHitTerrain onTouchscreenActionButton onTaskClaimed
 onChunkLoaded onPlayerRequestChunk onItemDropCreated
@@ -28,9 +29,9 @@ tick = () => {}			 or			 function tick() {}
 ```js
 /**
  * Called every tick, 20 times per second
- * @param dt - The time since the last tick in milliseconds
+ * @param ms
  */
-tick = (dt) => {}
+tick = (ms) => {}
 
 /**
  * Called when the lobby is shutting down
@@ -289,6 +290,14 @@ onPlayerClick = (playerId, wasAltClick) => {}
 onClientOptionUpdated = (playerId, option, value) => {}
 
 /**
+ * Called when a mob setting is updated
+ * @param {MobId} mobId - The id of the mob whose setting was updated
+ * @param {MobSetting} setting - The setting that was updated
+ * @param {any} value - The new value of the setting
+ */
+onMobSettingUpdated = (mobId, setting, value) => {}
+
+/**
  * Called when a player's inventory is updated
  * @param {PlayerId} playerId - The id of the player whose inventory was updated
  */
@@ -378,6 +387,13 @@ onPlayerSpawnMob = (playerId, mobId, mobType, x, y, z, mobHerdId, playSoundOnSpa
  * @param {boolean} playSoundOnSpawn - Whether to play a sound on spawn
  */
 onWorldSpawnMob = (mobId, mobType, x, y, z, mobHerdId, playSoundOnSpawn) => {}
+
+/**
+ * Called when a mob is despawned by the world.
+ * Return "preventDespawn" to prevent the mob from despawning.
+ * @param {MobId} mobId - The id of the mob despawned
+ */
+onWorldAttemptDespawnMob = (mobId) => {}
 
 /**
  * Called when a mob is despawned

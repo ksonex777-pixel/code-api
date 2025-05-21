@@ -556,4 +556,16 @@ fallDamage = false
  * @type {boolean}
  */
 canEditCode = false
+
+/**
+ * How much Aura XP is required per level.
+ * @type {number}
+ */
+auraPerLevel = 100
+
+/**
+ * The maximum Aura Level attainable - Set to 0 to disable Aura XP
+ * @type {number}
+ */
+maxAuraLevel = 0
 ```

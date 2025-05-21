@@ -56,6 +56,11 @@ name = ""
 /**
  * @type {number}
  */
+maxHealth = 75
+
+/**
+ * @type {number}
+ */
 initialHealth = 75
 
 /**
@@ -69,7 +74,12 @@ idleSound = "pigOink"
 attackSound = null
 
 /**
- * @type { { itemName: string; probabilityOfDrop: number; dropMinAmount: number; dropMaxAmount: number; }[] }
+ * @type {string}
+ */
+hurtSound = null
+
+/**
+ * @type { { itemName: string; probabilityOfDrop: number; dropMinAmount: number; dropMaxAmount: number; applyBurstImpulseToDrop?: boolean; }[] }
  */
 onDeathItemDrops = [
     {
@@ -133,6 +143,21 @@ jumpMultiplier = 1
 /**
  * @type {number}
  */
+runAwayRadius = 0
+
+/**
+ * @type {number}
+ */
+chaseRadius = 0
+
+/**
+ * @type {number}
+ */
+territoryRadius = 0
+
+/**
+ * @type {number}
+ */
 hostilityRadius = 0
 
 /**
@@ -179,6 +204,31 @@ attackEffectName = null
  * @type {number}
  */
 attackEffectDuration = 0
+
+/**
+ * @type {Readonly<{ tameItemName: string; probabilityOfTame: number; foodItemNames: readonly string[]; }>}
+ */
+tameInfo = null
+
+/**
+ * @type {number}
+ */
+onTamedHealthMultiplier = 4.0
+
+/**
+ * @type {string}
+ */
+ownerDbId = null
+
+/**
+ * @type {number}
+ */
+minFollowingRadius = 3
+
+/**
+ * @type {number}
+ */
+maxFollowingRadius = 12
 
 /**
  * @type {string}

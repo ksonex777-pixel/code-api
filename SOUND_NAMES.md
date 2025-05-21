@@ -39,6 +39,8 @@
 `drink`
 `eat1`
 `equip_leather1`
+`exp_collect`
+`exp_levelup`
 `fallsmall`
 `glass1`
 `glass2`
@@ -222,3 +224,10 @@
 `ZombieHurt2`
 `ZombieHurt3`
 `ZombieHurt4`
+`bass`
+`bassattack`
+`bd`
+`harp_pling`
+`hat`
+`levelup`
+`snare`
