@@ -76,7 +76,7 @@ attackSound = null
 /**
  * @type {string}
  */
-hurtSound = null
+hurtSound = "pigHurt"
 
 /**
  * @type { { itemName: string; probabilityOfDrop: number; dropMinAmount: number; dropMaxAmount: number; applyBurstImpulseToDrop?: boolean; }[] }
@@ -206,7 +206,7 @@ attackEffectName = null
 attackEffectDuration = 0
 
 /**
- * @type {Readonly<{ tameItemName: string; probabilityOfTame: number; foodItemNames: readonly string[]; }>}
+ * @type { { tameItemName: string; probabilityOfTame: number; foodItemNames: readonly string[]; } }
  */
 tameInfo = null
 

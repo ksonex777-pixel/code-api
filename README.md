@@ -268,6 +268,8 @@ applyMeleeHit(hittingEId, hitEId, dirFacing, bodyPartHit)
  *     attackDir = undefined,
  *     showCritParticles = false,
  *     reduceVerticalKbVelocity = true,
+ *     horizontalKbMultiplier = 1,
+ *     verticalKbMultiplier = 1,
  *     broadcastEntityHurt = true,
  *     attackCooldownSettings = null,
  *     hittingSoundOverride = null,
@@ -286,6 +288,8 @@ attemptApplyDamage({
     attackDir = undefined,
     showCritParticles = false,
     reduceVerticalKbVelocity = true,
+    horizontalKbMultiplier = 1,
+    verticalKbMultiplier = 1,
     broadcastEntityHurt = true,
     attackCooldownSettings = null,
     hittingSoundOverride = null,
@@ -697,13 +701,13 @@ isMobile(playerId)
  * @param {number} x
  * @param {number} y
  * @param {number} z
- * @param {string} name - Name of the item. Valid names can be found in blockMetadata.ts and itemMetadata.ts
+ * @param {string} itemName - Name of the item. Valid names can be found in blockMetadata.ts and itemMetadata.ts
  * @param {PNull<number>} [amount] - The amount of the item to include in the drop - so when the player picks up the item drop, they get this many of the item.
  * @param {boolean} [mergeItems] - Whether to merge the item into an nearby item of same type, if one exists. Defaults to false.
  * @param {ItemAttributes} [attributes] - Attributes of the item being dropped
  * @returns {PNull<EntityId>} - the id you can pass to setCantPickUpItem, or null if the item drop limit was reached
  */
-createItemDrop(x, y, z, name, amount, mergeItems, attributes)
+createItemDrop(x, y, z, itemName, amount, mergeItems, attributes)
 
 /**
  * Prevent a player from picking up an item. itemId returned by createItemDrop
@@ -954,7 +958,7 @@ removeItemName(playerId, itemName, amount)
 /**
  * Get the item at a specific index
  * Returns null if there is no item at that index
- * If there is an item, return an object of the format {name: itemName, amount: amountOfItem}
+ * If there is an item, return an object of the format { name: string; amount: PNull<number>; attributes: ItemAttributes; }
  *
  * @param {PlayerId} playerId
  * @param {number} itemSlotIndex
@@ -1040,7 +1044,7 @@ canOpenStandardChest(playerId, chestX, chestY, chestZ)
  * Give a standard chest an item and a certain amount of that item.
  * Returns the amount of item added to the chest.
  *
- * @param {readonly number[]} chestPos
+ * @param {number[]} chestPos
  * @param {string} itemName
  * @param {number} [itemAmount]
  * @param {PlayerId} [playerId] - The player who is interacting with the chest.
@@ -1086,7 +1090,7 @@ getStandardChestItemSlot(chestPos, idx)
 getStandardChestItems(chestPos)
 
 /**
- * @param {readonly number[]} chestPos
+ * @param {number[]} chestPos
  * @param {number} idx - 0-indexed
  * @param {string} itemName - Can be 'Air', in which case itemAmount will be ignored and the slot will be cleared.
  * @param {number} [itemAmount] - -1 for infinity. Should not be set, or null, for items that are not stackable.
@@ -1619,7 +1623,7 @@ type EntityName = {
     }
 }
 
-type IngameIconName = "Damage" | "Damage Reduction" | "Speed" | "VoidJump" | "Fist" | "Frozen" | "Hydrated" | "Invisible" | "Jump Boost" | "Poisoned" | "Slowness" | "Weakness" | "Health Regen" | "Haste" | "Heat Resistance" | "Gliding" | "Boating" | "Obsidian Boating" | "Bunny Hop" | "FallDamage" | "Feather Falling" | "Damage Enchantment" | "Critical Damage Enchantment" | "Attack Speed Enchantment" | "Protection Enchantment" | "Health Enchantment" | "Health Regen Enchantment"
+type IngameIconName = "Damage" | "Damage Reduction" | "Speed" | "VoidJump" | "Fist" | "Frozen" | "Hydrated" | "Invisible" | "Jump Boost" | "Poisoned" | "Slowness" | "Weakness" | "Health Regen" | "Haste" | "Heat Resistance" | "Gliding" | "Boating" | "Obsidian Boating" | "Bunny Hop" | "FallDamage" | "Feather Falling" | "Rested Damage" | "Rested Haste" | "Rested Speed" | "Rested Farming Yield" | "Rested Aura" | "Damage Enchantment" | "Critical Damage Enchantment" | "Attack Speed Enchantment" | "Protection Enchantment" | "Health Enchantment" | "Health Regen Enchantment" | "Stomp Damage Enchantment" | "Knockback Resist Enchantment" | "Arrow Speed Enchantment" | "Arrow Damage Enchantment" | "Quick Charge Enchantment" | "Break Speed Enchantment" | "Momentum Enchantment" | "Mining Yield Enchantment" | "Farming Yield Enchantment" | "Mining Aura Enchantment" | "Digging Aura Enchantment" | "Lumber Aura Enchantment" | "Farming Aura Enchantment" | "Vertical Knockback Enchantment" | "Horizontal Knockback Enchantment"
 
 enum ParticleSystemBlendMode {
     // Source color is added to the destination color without alpha affecting the result
