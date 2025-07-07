@@ -76,6 +76,11 @@ attackSound = null
 /**
  * @type {string}
  */
+secondaryAttackSound = null
+
+/**
+ * @type {string}
+ */
 hurtSound = "pigHurt"
 
 /**
@@ -178,12 +183,27 @@ attackRadius = 0
 /**
  * @type {number}
  */
+secondaryAttackRadius = 0
+
+/**
+ * @type {number}
+ */
 attackDamage = 0
 
 /**
  * @type {number}
  */
+secondaryAttackDamage = 0
+
+/**
+ * @type {number}
+ */
 attackImpulse = 0
+
+/**
+ * @type {number}
+ */
+secondaryAttackImpulse = 0
 
 /**
  * @type {string}
@@ -198,6 +218,11 @@ attackItemName = null
 /**
  * @type {string}
  */
+secondaryAttackItemName = null
+
+/**
+ * @type {string}
+ */
 attackEffectName = null
 
 /**
@@ -206,7 +231,7 @@ attackEffectName = null
 attackEffectDuration = 0
 
 /**
- * @type { { tameItemName: string; probabilityOfTame: number; foodItemNames: readonly string[]; } }
+ * @type {Readonly<MobTameInfo>}
  */
 tameInfo = null
 

@@ -1085,7 +1085,7 @@ getStandardChestItemSlot(chestPos, idx)
  * Get all the items from a standard chest in order. Use this instead of repetitive calls to getStandardChestItemSlot
  *
  * @param {number[]} chestPos
- * @returns {readonly PNull<InvenItem>[]}
+ * @returns {PNull<InvenItem>[]}
  */
 getStandardChestItems(chestPos)
 
@@ -1117,7 +1117,7 @@ getMoonstoneChestItemSlot(playerId, idx)
  * Moonstone chests are a type of chest where a player accesses the same contents no matter the location of the moonstone chest
  *
  * @param {PlayerId} playerId
- * @returns {readonly PNull<InvenItem>[]}
+ * @returns {PNull<InvenItem>[]}
  */
 getMoonstoneChestItems(playerId)
 
@@ -1623,7 +1623,7 @@ type EntityName = {
     }
 }
 
-type IngameIconName = "Damage" | "Damage Reduction" | "Speed" | "VoidJump" | "Fist" | "Frozen" | "Hydrated" | "Invisible" | "Jump Boost" | "Poisoned" | "Slowness" | "Weakness" | "Health Regen" | "Haste" | "Heat Resistance" | "Gliding" | "Boating" | "Obsidian Boating" | "Bunny Hop" | "FallDamage" | "Feather Falling" | "Rested Damage" | "Rested Haste" | "Rested Speed" | "Rested Farming Yield" | "Rested Aura" | "Damage Enchantment" | "Critical Damage Enchantment" | "Attack Speed Enchantment" | "Protection Enchantment" | "Health Enchantment" | "Health Regen Enchantment" | "Stomp Damage Enchantment" | "Knockback Resist Enchantment" | "Arrow Speed Enchantment" | "Arrow Damage Enchantment" | "Quick Charge Enchantment" | "Break Speed Enchantment" | "Momentum Enchantment" | "Mining Yield Enchantment" | "Farming Yield Enchantment" | "Mining Aura Enchantment" | "Digging Aura Enchantment" | "Lumber Aura Enchantment" | "Farming Aura Enchantment" | "Vertical Knockback Enchantment" | "Horizontal Knockback Enchantment"
+type IngameIconName = "Damage" | "Damage Reduction" | "Speed" | "VoidJump" | "Fist" | "Frozen" | "Hydrated" | "Invisible" | "Jump Boost" | "Poisoned" | "Slowness" | "Weakness" | "Health Regen" | "Haste" | "Double Jump" | "Heat Resistance" | "Gliding" | "Boating" | "Obsidian Boating" | "Bunny Hop" | "FallDamage" | "Feather Falling" | "Rested Damage" | "Rested Haste" | "Rested Speed" | "Rested Farming Yield" | "Rested Aura" | "Damage Enchantment" | "Critical Damage Enchantment" | "Attack Speed Enchantment" | "Protection Enchantment" | "Health Enchantment" | "Health Regen Enchantment" | "Stomp Damage Enchantment" | "Knockback Resist Enchantment" | "Arrow Speed Enchantment" | "Arrow Damage Enchantment" | "Quick Charge Enchantment" | "Break Speed Enchantment" | "Momentum Enchantment" | "Mining Yield Enchantment" | "Farming Yield Enchantment" | "Mining Aura Enchantment" | "Digging Aura Enchantment" | "Lumber Aura Enchantment" | "Farming Aura Enchantment" | "Vertical Knockback Enchantment" | "Horizontal Knockback Enchantment"
 
 enum ParticleSystemBlendMode {
     // Source color is added to the destination color without alpha affecting the result
@@ -1643,6 +1643,7 @@ type RecipesForItem = {
     produces: number
     station?: string | string[]
     onCraftedAura?: number
+    isStarterRecipe?: boolean
 }[]
 
 type StyledIcon = {
