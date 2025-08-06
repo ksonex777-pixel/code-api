@@ -113,7 +113,7 @@ baseWalkingSpeed = 3.5
 /**
  * @type {number}
  */
-baseRunningSpeed = 4.55
+baseRunningSpeed = 4.55 * 0.85
 
 /**
  * @type {number}
@@ -254,6 +254,11 @@ minFollowingRadius = 3
  * @type {number}
  */
 maxFollowingRadius = 12
+
+/**
+ * @type {boolean}
+ */
+isRideable = false
 
 /**
  * @type {string}

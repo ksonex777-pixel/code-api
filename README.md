@@ -245,13 +245,19 @@ setHealth(entityId, newHealth, whoDidDamage, increaseMaxHealthIfNeeded)
 /**
  * Make it as if hittingEId hit hitEId
  *
- * @param {PlayerId} hittingEId
- * @param {PlayerId} hitEId
+ * @param {LifeformId} hittingEId
+ * @param {LifeformId} hitEId
  * @param {number[]} dirFacing
  * @param {PNull<PlayerBodyPart>} [bodyPartHit]
- * @returns {void}
+ * @param { {
+ *     damage?: PNull<number>
+ *     heldItemName?: PNull<string>
+ *     horizontalKbMultiplier?: number
+ *     verticalKbMultiplier?: number
+ * } } [overrides]
+ * @returns {boolean}
  */
-applyMeleeHit(hittingEId, hitEId, dirFacing, bodyPartHit)
+applyMeleeHit(hittingEId, hitEId, dirFacing, bodyPartHit, overrides)
 
 /**
  * Apply damage to a lifeform.
@@ -562,9 +568,10 @@ setBlock(x, y, z, blockName)
  * @param {number} y
  * @param {number} z
  * @param {BlockName} blockName
+ * @param {WorldBlockChangedInfo} [extraInfo]
  * @returns {"preventChange" | "preventDrop" | void} - "preventChange" if the change was prevented, "preventDrop" if the change was allowed but without dropping any items, and undefined if the change was allowed with an item drop
  */
-attemptWorldChangeBlock(initiatorDbId, x, y, z, blockName)
+attemptWorldChangeBlock(initiatorDbId, x, y, z, blockName, extraInfo)
 
 /**
  * Returns whether a block is solid or not.
@@ -705,9 +712,10 @@ isMobile(playerId)
  * @param {PNull<number>} [amount] - The amount of the item to include in the drop - so when the player picks up the item drop, they get this many of the item.
  * @param {boolean} [mergeItems] - Whether to merge the item into an nearby item of same type, if one exists. Defaults to false.
  * @param {ItemAttributes} [attributes] - Attributes of the item being dropped
+ * @param {number} [timeTillDespawn] - Time till the item automatically despawns in milliseconds. Max of 5 mins.
  * @returns {PNull<EntityId>} - the id you can pass to setCantPickUpItem, or null if the item drop limit was reached
  */
-createItemDrop(x, y, z, itemName, amount, mergeItems, attributes)
+createItemDrop(x, y, z, itemName, amount, mergeItems, attributes, timeTillDespawn)
 
 /**
  * Prevent a player from picking up an item. itemId returned by createItemDrop
@@ -740,15 +748,15 @@ getInitialItemMetadata(itemName)
  * Either based on a client option for a player: (e.g. `DirtTtb`)
  * or its entry in blockMetadata.ts or nonBlockMetadata in itemMetadata.ts if no client option is set.
  *
- * If null is passed for playerId, this is simply its entry in blockMetadata etc.
+ * If null is passed for lifeformId, this is simply its entry in blockMetadata etc.
  *
  *
- * @param {PNull<PlayerId>} playerId
+ * @param {PNull<LifeformId>} lifeformId
  * @param {string} itemName
  * @param {K} stat
  * @returns {AnyMetadataItem[K]}
  */
-getItemStat(playerId, itemName, stat)
+getItemStat(lifeformId, itemName, stat)
 
 /**
  * Set the direction the player is looking.
@@ -1176,10 +1184,19 @@ editItemCraftingRecipes(playerId, itemName, recipesForItem)
  * Reset the crafting recipes for a given back to its original bloxd state
  *
  * @param {PlayerId} playerId
- * @param {string} itemName
+ * @param {PNull<string>} itemName - Resets all crafting recipes for the given player if null, otherwise resets the crafting recipes for the given item.
  * @returns {void}
  */
 resetItemCraftingRecipes(playerId, itemName)
+
+/**
+ * Removes crafting recipes
+ *
+ * @param {PlayerId} playerId
+ * @param {PNull<string>} itemName - Removes all crafting recipes for the given player if null, otherwise removes the crafting recipes for the given item.
+ * @returns {void}
+ */
+removeItemCraftingRecipes(playerId, itemName)
 
 /**
  * Check if a position is within a cubic rectangle
@@ -1623,28 +1640,30 @@ type EntityName = {
     }
 }
 
-type IngameIconName = "Damage" | "Damage Reduction" | "Speed" | "VoidJump" | "Fist" | "Frozen" | "Hydrated" | "Invisible" | "Jump Boost" | "Poisoned" | "Slowness" | "Weakness" | "Health Regen" | "Haste" | "Double Jump" | "Heat Resistance" | "Gliding" | "Boating" | "Obsidian Boating" | "Bunny Hop" | "FallDamage" | "Feather Falling" | "Rested Damage" | "Rested Haste" | "Rested Speed" | "Rested Farming Yield" | "Rested Aura" | "Damage Enchantment" | "Critical Damage Enchantment" | "Attack Speed Enchantment" | "Protection Enchantment" | "Health Enchantment" | "Health Regen Enchantment" | "Stomp Damage Enchantment" | "Knockback Resist Enchantment" | "Arrow Speed Enchantment" | "Arrow Damage Enchantment" | "Quick Charge Enchantment" | "Break Speed Enchantment" | "Momentum Enchantment" | "Mining Yield Enchantment" | "Farming Yield Enchantment" | "Mining Aura Enchantment" | "Digging Aura Enchantment" | "Lumber Aura Enchantment" | "Farming Aura Enchantment" | "Vertical Knockback Enchantment" | "Horizontal Knockback Enchantment"
+type IngameIconName = "Damage" | "Damage Reduction" | "Speed" | "VoidJump" | "Fist" | "Frozen" | "Hydrated" | "Invisible" | "Jump Boost" | "Poisoned" | "Slowness" | "Weakness" | "Health Regen" | "Haste" | "Double Jump" | "Heat Resistance" | "Gliding" | "Boating" | "Obsidian Boating" | "Riding" | "Bunny Hop" | "FallDamage" | "Feather Falling" | "Rested Damage" | "Rested Haste" | "Rested Speed" | "Rested Farming Yield" | "Rested Aura" | "Damage Enchantment" | "Critical Damage Enchantment" | "Attack Speed Enchantment" | "Protection Enchantment" | "Health Enchantment" | "Health Regen Enchantment" | "Stomp Damage Enchantment" | "Knockback Resist Enchantment" | "Arrow Speed Enchantment" | "Arrow Damage Enchantment" | "Quick Charge Enchantment" | "Break Speed Enchantment" | "Momentum Enchantment" | "Mining Yield Enchantment" | "Farming Yield Enchantment" | "Mining Aura Enchantment" | "Digging Aura Enchantment" | "Lumber Aura Enchantment" | "Farming Aura Enchantment" | "Vertical Knockback Enchantment" | "Horizontal Knockback Enchantment"
 
 enum ParticleSystemBlendMode {
     // Source color is added to the destination color without alpha affecting the result
     OneOne = 0,
-    // Blend current color and particle color using particle’s alpha
+    // Blend current color and particle color using particle's alpha
     Standard = 1,
-    // Add current color and particle color multiplied by particle’s alpha
+    // Add current color and particle color multiplied by particle's alpha
     Add,
     // Multiply current color with particle color
     Multiply,
-    // Multiply current color with particle color then add current color and particle color multiplied by particle’s alpha
+    // Multiply current color with particle color then add current color and particle color multiplied by particle's alpha
     MultiplyAdd,
 }
 
-type RecipesForItem = {
-    requires: { items: string[]; amt: number }[]
-    produces: number
-    station?: string | string[]
-    onCraftedAura?: number
-    isStarterRecipe?: boolean
-}[]
+type RecipesForItem = RecursiveReadonly<
+    {
+        requires: { items: string[]; amt: number }[]
+        produces: number
+        station?: string | string[]
+        onCraftedAura?: number
+        isStarterRecipe?: boolean
+    }[]
+>
 
 type StyledIcon = {
     icon: string
@@ -1710,6 +1729,10 @@ enum WalkThroughType {
     CANT_WALK_THROUGH = 0,
     CAN_WALK_THROUGH = 1,
     DEFAULT_WALK_THROUGH = 2,
+}
+
+type WorldBlockChangedInfo = {
+    cause: PNull<"Paintball" | "FloorCreator" | "Sapling" | "StemFruit" | "MeltingIce" | "Explosion">
 }
 
 ```
