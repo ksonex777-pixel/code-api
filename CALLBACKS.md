@@ -15,8 +15,8 @@ onWorldChangeBlock onCreateBloxdMeshEntity onEntityCollision
 onPlayerAttemptSpawnMob onWorldAttemptSpawnMob onPlayerSpawnMob
 onWorldSpawnMob onWorldAttemptDespawnMob onMobDespawned onPlayerAttack
 onPlayerDamagingOtherPlayer onPlayerDamagingMob onMobDamagingPlayer
-onMobDamagingOtherMob onPlayerKilledOtherPlayer onMobKilledPlayer
-onPlayerKilledMob onMobKilledOtherMob onPlayerPotionEffect
+onMobDamagingOtherMob onAttemptKillPlayer onPlayerKilledOtherPlayer
+onMobKilledPlayer onPlayerKilledMob onMobKilledOtherMob onPlayerPotionEffect
 onPlayerDamagingMeshEntity onPlayerBreakMeshEntity onPlayerUsedThrowable
 onPlayerThrowableHitTerrain onTouchscreenActionButton onTaskClaimed
 onChunkLoaded onPlayerRequestChunk onItemDropCreated
@@ -457,6 +457,14 @@ onMobDamagingPlayer = (attackingMob, damagedPlayer, damageDealt, withItem) => {}
  * @param {string} withItem
  */
 onMobDamagingOtherMob = (attackingMob, damagedMob, damageDealt, withItem) => {}
+
+/**
+ * Called when a player is about to be killed
+ * Return "preventDeath" to prevent the player from being killed
+ * @param {PlayerId} killedPlayer - The id of the player being killed
+ * @param {LifeformId} [attackingLifeform] - The optional id of the lifeform attacking the player
+ */
+onAttemptKillPlayer = (killedPlayer, attackingLifeform) => {}
 
 /**
  * Called when a player kills another player
