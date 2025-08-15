@@ -1149,7 +1149,7 @@ setMoonstoneChestItemSlot(playerId, idx, itemName, itemAmount, metadata)
  * @param {number} x
  * @param {number} y
  * @param {number} z
- * @param {unknown} data
+ * @param {Object} data
  * @returns {void}
  */
 setBlockData(x, y, z, data)
@@ -1758,6 +1758,18 @@ enum WalkThroughType {
 
 type WorldBlockChangedInfo = {
     cause: PNull<"Paintball" | "FloorCreator" | "Sapling" | "StemFruit" | "MeltingIce" | "Explosion">
+}
+
+type EarthSkyBox = {
+    type: "earth"
+    inclination?: number
+    turbidity?: number
+    infiniteDistance?: number
+    luminance?: number
+    yCameraOffset?: number
+    azimuth?: number
+    // Not part of sky model by default; heavily tint to a vertex color
+    vertexTint?: [number, number, number]
 }
 
 ```
