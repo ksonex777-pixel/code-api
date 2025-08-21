@@ -1380,6 +1380,24 @@ spinKart(playerId, dir, durationInTicks)
 setItemAmount(itemId, newAmount)
 
 /**
+ * Update the max players and soft max players matchmaking will use
+ *
+ * softMaxPlayers is the number of players that matchmaking will route to using "Quick Play".
+ * Once the softMaxPlayers limit is reached, this lobby can only be joined by requesting the lobby name or joining a friend.
+ *
+ * maxPlayers is the absolute maximum: a lobby will not have more players than this.
+ * Tip: softMaxPlayers should be around 90% of maxPlayers
+ *
+ * WARNING: This change is not immediate, as it takes a while for matchmaking to find out.
+ * Also, this will not kick players out of the lobby if set to a lower value than the current player count.
+ *
+ * @param {number} softMaxPlayers
+ * @param {number} maxPlayers
+ * @returns {void}
+ */
+setMaxPlayers(softMaxPlayers, maxPlayers)
+
+/**
  * Show a message over the shop in the same place that a shop item's onBoughtMessage is shown.
  * Displays for a couple seconds before disappearing
  * Use case is to show a dynamic message when player buys an item
@@ -1665,7 +1683,7 @@ type EntityName = {
     }
 }
 
-type IngameIconName = "Damage" | "Damage Reduction" | "Speed" | "VoidJump" | "Fist" | "Frozen" | "Hydrated" | "Invisible" | "Jump Boost" | "Poisoned" | "Slowness" | "Weakness" | "Health Regen" | "Haste" | "Double Jump" | "Heat Resistance" | "Gliding" | "Boating" | "Obsidian Boating" | "Riding" | "Bunny Hop" | "FallDamage" | "Feather Falling" | "Rested Damage" | "Rested Haste" | "Rested Speed" | "Rested Farming Yield" | "Rested Aura" | "Damage Enchantment" | "Critical Damage Enchantment" | "Attack Speed Enchantment" | "Protection Enchantment" | "Health Enchantment" | "Health Regen Enchantment" | "Stomp Damage Enchantment" | "Knockback Resist Enchantment" | "Arrow Speed Enchantment" | "Arrow Damage Enchantment" | "Quick Charge Enchantment" | "Break Speed Enchantment" | "Momentum Enchantment" | "Mining Yield Enchantment" | "Farming Yield Enchantment" | "Mining Aura Enchantment" | "Digging Aura Enchantment" | "Lumber Aura Enchantment" | "Farming Aura Enchantment" | "Vertical Knockback Enchantment" | "Horizontal Knockback Enchantment" | "Health" | "HealthShield"
+type IngameIconName = "Damage" | "Damage Reduction" | "Speed" | "VoidJump" | "Fist" | "Frozen" | "Hydrated" | "Invisible" | "Jump Boost" | "Poisoned" | "Slowness" | "Weakness" | "Health Regen" | "Haste" | "Double Jump" | "Heat Resistance" | "Gliding" | "Boating" | "Obsidian Boating" | "Riding" | "Bunny Hop" | "FallDamage" | "Feather Falling" | "Thief" | "Rested Damage" | "Rested Haste" | "Rested Speed" | "Rested Farming Yield" | "Rested Aura" | "Damage Enchantment" | "Critical Damage Enchantment" | "Attack Speed Enchantment" | "Protection Enchantment" | "Health Enchantment" | "Health Regen Enchantment" | "Stomp Damage Enchantment" | "Knockback Resist Enchantment" | "Arrow Speed Enchantment" | "Arrow Damage Enchantment" | "Quick Charge Enchantment" | "Break Speed Enchantment" | "Momentum Enchantment" | "Mining Yield Enchantment" | "Farming Yield Enchantment" | "Mining Aura Enchantment" | "Digging Aura Enchantment" | "Lumber Aura Enchantment" | "Farming Aura Enchantment" | "Vertical Knockback Enchantment" | "Horizontal Knockback Enchantment" | "Health" | "HealthShield"
 
 enum ParticleSystemBlendMode {
     // Source color is added to the destination color without alpha affecting the result
