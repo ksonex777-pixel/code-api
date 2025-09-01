@@ -403,6 +403,12 @@ splashPotionEffectDuration = 8000
 arrowPotionEffectDuration = 6000
 
 /**
+ * RGBA array [r, g, b, a] for camera screen tint effect. Values fall between 0 and 1.
+ * @type {[number, number, number, number]}
+ */
+cameraTint = null
+
+/**
  * After dying the player can respawn after this many seconds
  * @type {number}
  */

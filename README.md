@@ -1588,7 +1588,7 @@ playClientPredictedSound(soundName, volume, rate, posSettings, predictedBy)
  * @param {number} explosionRadius
  * @param {number[]} explosionPos
  * @param {boolean} ignoreProjectiles
- * @returns { { force: Pos; forceFrac: number; } }
+ * @returns { { force: [number, number, number]; forceFrac: number; } }
  */
 calcExplosionForce(eId, explosionType, knockbackFactor, explosionRadius, explosionPos, ignoreProjectiles)
 
@@ -1603,7 +1603,7 @@ calcExplosionForce(eId, explosionType, knockbackFactor, explosionRadius, explosi
  * (currently only applicable to in-engine code), you should not verify using this
  *
  * @param {PlayerId} playerId
- * @returns { { position: Pos; normal: Pos; adjacent: Pos } }
+ * @returns { { position: [number, number, number]; normal: [number, number, number]; adjacent: [number, number, number] } }
  */
 getPlayerTargetInfo(playerId)
 
@@ -1612,7 +1612,7 @@ getPlayerTargetInfo(playerId)
  * The camPos has the same limitations described in getPlayerTargetInfo
  *
  * @param {PlayerId} playerId
- * @returns { { camPos: Pos; dir: Pos; angleDir: AngleDir; moveHeading: number } }
+ * @returns { { camPos: [number, number, number]; dir: [number, number, number]; angleDir: AngleDir; moveHeading: number } }
  */
 getPlayerFacingInfo(playerId)
 
