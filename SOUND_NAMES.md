@@ -4,6 +4,7 @@
 - If you want a random similar sound then you can remove the number from the sound name of your choice
 - If a sound isn't working then there might be an error in your console explaining why
 
+`rain`
 `beep`
 `bow`
 `bucketEmpty1`
