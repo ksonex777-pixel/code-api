@@ -1,3 +1,4 @@
+An get this effect:
 /** Effect this one
  * @param {PlayerId} playerId
  * @param {Effect} effect
