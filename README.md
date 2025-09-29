@@ -1671,9 +1671,14 @@ setAuraLevel(playerId, level)
  * @returns {number} - The actual change in aura
  */
 applyAuraChange(playerId, auraDiff)
+##  CONSOLE
+There get any `console` api
+/**
+ * @param [nameLog]{name} nameLog
+ */
+log(nameLog)
 ```
-
-## Glossary of Referenced Types
+### Glossary of Referenced Types
 
 These 'types' can't be referenced by your code, but they help explain some of the parameters in the API.
 
