@@ -12,6 +12,13 @@ A player's "Client Options" impact what they are capable of doing in the world. 
  * @returns {void}
  */
 setClientOption(playerId, option, value)
+/**
+ * with play to youtube
+ * @param {PlayerId} playerId
+ * @param {Name} name
+ * @param {Option} option
+ */
+setYoutube(playerId, name, option)
 
 /**
  * Returns the current value of a client option
@@ -574,4 +581,8 @@ auraPerLevel = 100
  * @type {number}
  */
 maxAuraLevel = 0
-```
+/**
+ * The a owner like breaking an press to board
+ * @param {boolean}
+ */
+canEditPress = false
