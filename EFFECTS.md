@@ -8,10 +8,10 @@ An get this effect:
  * @param {number} inbuiltLevel
  */
 applyEffect(playerId, effect, time, { inbuiltLevel: number })
-```
 
 /** Remove effect an click this!
  * @param {PlayerId} playerId
  * @param {Effect} effect
  */
 removeEffect(playerId, effect)
+```
