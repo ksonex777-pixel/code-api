@@ -28,6 +28,12 @@ Please use [our discord](https://discord.gg/vwMp5y25RX) to report any issues you
 
 ## Examples
 
+Code Block to make the heal player 0:
+
+```js
+api.setHealth(myId, 0)
+```
+
 Code Block to make the player jump:
 
 ```js
