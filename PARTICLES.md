@@ -21,7 +21,7 @@ api.playParticleEffect({
     dir2: [1, 1, 1],
     pos1: [x, y, z],
     pos2: [x + 1, y + 1, z + 1],
-    texture: "bubble",
+    texture: "drift",
     minLifeTime: 0.2,
     maxLifeTime: 0.6,
     minEmitPower: 2,
