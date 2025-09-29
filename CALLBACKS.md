@@ -15,7 +15,7 @@ onWorldChangeBlock onCreateBloxdMeshEntity onEntityCollision
 onPlayerAttemptSpawnMob onWorldAttemptSpawnMob onPlayerSpawnMob
 onWorldSpawnMob onWorldAttemptDespawnMob onMobDespawned onPlayerAttack
 onPlayerDamagingOtherPlayer onPlayerDamagingMob onMobDamagingPlayer
-onMobDamagingOtherMob onAttemptKillPlayer onPlayerKilledOtherPlayer
+onMobDamagingOtherMob onPlayerKilledPlayer onPlayerKilledOtherPlayer
 onMobKilledPlayer onPlayerKilledMob onMobKilledOtherMob onPlayerPotionEffect
 onPlayerDamagingMeshEntity onPlayerBreakMeshEntity onPlayerUsedThrowable
 onPlayerThrowableHitTerrain onTouchscreenActionButton onTaskClaimed
@@ -461,12 +461,19 @@ onMobDamagingPlayer = (attackingMob, damagedPlayer, damageDealt, withItem) => {}
 onMobDamagingOtherMob = (attackingMob, damagedMob, damageDealt, withItem) => {}
 
 /**
- * Called when a player is about to be killed
+ * Called when a other player is about to be killed
  * Return "preventDeath" to prevent the player from being killed
  * @param {PlayerId} killedPlayer - The id of the player being killed
  * @param {LifeformId} [attackingLifeform] - The optional id of the lifeform attacking the player
  */
-onAttemptKillPlayer = (killedPlayer, attackingLifeform) => {}
+onAttemptKillOtherPlayer = (killedOtherPlayer, attackingLifeform) => {}
+
+/**
+ * Called when a player yourself kills
+ * Return "keepInventory" to not drop the player yourself's inventory
+ * @param killedPlayerYourself - The id of the player yourself attacking
+ */
+onPlayerKilledPlayer(killedPlayerYourself) => {}
 
 /**
  * Called when a player kills another player
