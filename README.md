@@ -117,7 +117,14 @@ for (const playerId of api.getPlayerIds()) {
 
 Global object `api` has the following methods:
 
-```js
+```js/
+/**
+ * Tphere an player with other player
+ * @param {PlayerId} playerId
+ * @param {PlayerName} [tpPlayerName]
+ */
+tphereName(playerId, tpPlayerName)
+
 /**
  * Get position of a player / entity.
  * @param {EntityId} entityId
