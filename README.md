@@ -544,12 +544,6 @@ getBlockId(x, y, z)
  *
  * This function is optimised for setting broad swathes of blocks. For example, if you have a 50x50x50 area you need to turn to air, it will run performantly if you call this in double nested loops.
  *
- * IF you're only changing a few blocks, you want this to be super snappy for players, AND you're calling this outside of your _tick function, you can use api.setOptimisations(false).
- *
- * If you want the optimisations for large quantities of blocks later on, then call api.setOptimisations(true) when you're done.
- *
- *
- *
  * @param {number | number[]} x - Can be an array
  * @param {number | BlockName} y - Should be blockname if first param is array
  * @param {number} [z]
@@ -597,7 +591,6 @@ setBlockRect(pos1, pos2, blockName)
 
 /**
  * Create walls by providing two opposite corners of the cuboid
- *
  *
  * @param {number[]} pos1 - array [x, y, z]
  * @param {number[]} pos2 - array [x, y, z]
@@ -750,7 +743,6 @@ getInitialItemMetadata(itemName)
  *
  * If null is passed for lifeformId, this is simply its entry in blockMetadata etc.
  *
- *
  * @param {PNull<LifeformId>} lifeformId
  * @param {string} itemName
  * @param {K} stat
@@ -865,7 +857,6 @@ resetCanChangeBlockType(playerId, blockName)
  * and [1, 1, 1] is pos2 then the 8 blocks contained within low and high will be able to be broken.
  * Overrides setCantChangeBlockType
  *
- *
  * @param {PlayerId} playerId
  * @param {number[]} pos1 - Arg as [x, y, z]
  * @param {number[]} pos2 - Arg as [x, y, z]
@@ -877,7 +868,6 @@ setCanChangeBlockRect(playerId, pos1, pos2)
  * Make it so a player cant Change blocks within two points. Coordinates are inclusive. E.g. if [0, 0, 0] is pos1
  * and [1, 1, 1] is pos2 then the 8 blocks contained within pos1 and pos2 won't be able to be broken.
  * Overrides setCanChangeBlockType
- *
  *
  * @param {PlayerId} playerId
  * @param {number[]} pos1 - Arg as [x, y, z]
@@ -898,7 +888,6 @@ resetCanChangeBlockRect(playerId, pos1, pos2)
 
 /**
  * Allow a player to walk through a type of block. For blocks that are normally solid and not seethrough, the player will experience slight visual glitches while inside the block.
- *
  *
  * @param {PlayerId} playerId
  * @param {BlockName} blockName
@@ -1196,6 +1185,26 @@ getLobbyType()
 progressBarUpdate(playerId, toFraction, toDuration)
 
 /**
+ * This will initiate the MiddleScreenBar, starting at empty and filling up to full over the given duration.
+ * Good to represent cooldowns (eg gun reload) or charged items (eg crossbow)
+ *
+ * @param {PlayerId} playerId
+ * @param {number} duration - ms over which the MiddleScreenBar fills up
+ * @param {boolean} [chargeExpiresAutomatically] - Defaults to true. If true, the bar will disappear upon reaching full. If false, the bar will remain at full until hidden with removeMiddleScreenBar
+ * @param {number} [horizontalBarRemOffset] - Offset the bar left or right (in css unit - rem)
+ * @returns {void}
+ */
+initiateMiddleScreenBar(playerId, duration, chargeExpiresAutomatically, horizontalBarRemOffset)
+
+/**
+ * If there is any current middle screen bar running, this will hide it
+ *
+ * @param {PlayerId} playerId
+ * @returns {void}
+ */
+removeMiddleScreenBar(playerId)
+
+/**
  * Edit the crafting recipes for a player
  *
  * @param {PlayerId} playerId
@@ -1271,7 +1280,7 @@ createMobHerd()
  *     playSoundOnSpawn: boolean
  *     variation: MobVariation<TMobType>
  *     }>} [opts] - Includes:
- * @returns {PNull<MobId>}
+ * @returns {PNull<MobId>} - null if the mob could not be spawned, e.g. if there are not enough players in the lobby to support the number of mobs
  */
 attemptSpawnMob(mobType, x, y, z, opts)
 
@@ -1360,15 +1369,6 @@ setVelocity(eId, x, y, z)
  * @returns {void}
  */
 setEntityHeading(entityId, newHeading)
-
-/**
- * Spin player in kart
- * @param {PlayerId} playerId
- * @param {number} dir - direction of spin, 1 for right, -1 for left
- * @param {number} durationInTicks - the number of ticks it takes to complete a spin
- * @returns {void}
- */
-spinKart(playerId, dir, durationInTicks)
 
 /**
  * Set the amount of an item in an item entity
@@ -1595,7 +1595,6 @@ calcExplosionForce(eId, explosionType, knockbackFactor, explosionRadius, explosi
 /**
  * Get the position of a player's target block and the block adjacent to it (e.g. where a block would be placed)
  *
- *
  * Note: This position is a tick ahead of the client's block target info (noa.targetedBlock),
  * since the client updates the blocktarget before the entities tick (and since it uses the renderposition of the camera)
  *
@@ -1698,15 +1697,14 @@ enum ParticleSystemBlendMode {
     MultiplyAdd,
 }
 
-type RecipesForItem = RecursiveReadonly<
+type RecipesForItem = 
     {
-        requires: { items: string[]; amt: number }[]
+        requires: { items: ItemName[]; amt: number }[]
         produces: number
         station?: string | string[]
         onCraftedAura?: number
         isStarterRecipe?: boolean
     }[]
->
 
 type StyledIcon = {
     icon: string
@@ -1789,5 +1787,4 @@ type EarthSkyBox = {
     // Not part of sky model by default; heavily tint to a vertex color
     vertexTint?: [number, number, number]
 }
-
 ```

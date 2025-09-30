@@ -159,9 +159,6 @@ maxPlayerZoom = 15
  * @type {LobbyLeaderboardInfo}
  */
 lobbyLeaderboardInfo = {
-        pfp: {
-            sortPriority: 1,
-        },
         name: {
             displayName: "Name",
             sortPriority: 0,
@@ -467,36 +464,6 @@ dealingDamageDefaultMultiplier = 1
  * @type {number}
  */
 receivingDamageMultiplier = 1
-
-/**
- * Speed multiplier for karts
- * @type {number}
- */
-kartTargetSpeedMult = 1
-
-/**
- * Speed multiplier for speed boost effects in karts
- * @type {number}
- */
-kartSpeedEffectMult = 1
-
-/**
- * Kart gliding height
- * @type {number}
- */
-kartGliderTargetHeight = 25
-
-/**
- * Kart ground height
- * @type {number}
- */
-kartGroundHeight = 4
-
-/**
- * How much to step towards target speed each movement tick (acceleration)
- * @type {number}
- */
-kartApproachMaxSpeedScalar = 1
 
 /**
  * Scale factor to use for dropped item meshes

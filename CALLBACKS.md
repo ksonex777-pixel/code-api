@@ -288,7 +288,7 @@ onPlayerClick = (playerId, wasAltClick) => {}
  * Called when a client option is updated
  * @param {PlayerId} playerId - The id of the player whose option was updated
  * @param {ClientOption} option - The option that was updated
- * @param {any} value - The new value of the option
+ * @param {any} value - The new value of the option, always null for custom code
  */
 onClientOptionUpdated = (playerId, option, value) => {}
 
