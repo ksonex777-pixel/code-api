@@ -690,6 +690,13 @@ chunkIdToBotLeftCoord(chunkId)
 sendTopRightHelper(playerId, icon, text, opts)
 
 /**
+ * Whether the player is on computer device or a ipad.
+ * @param {PlayerId} playerId
+ * @returns {boolean}
+ */
+isComputer(playerId)
+
+/**
  * Whether the player is on a mobile device or a computer.
  * @param {PlayerId} playerId
  * @returns {boolean}
