@@ -474,6 +474,13 @@ getOtherEntitySetting(relevantPlayerId, targetedEntityId, settingName)
 playParticleEffect(opts, clientPredictedBy)
 
 /**
+ * Get the in game name of an mob.
+ * @param {MobId} mobId
+ * @returns {string}
+ */
+getMobName(mobId)
+
+/**
  * Get the in game name of an entity.
  * @param {EntityId} entityId
  * @returns {string}
@@ -1251,6 +1258,12 @@ isInsideRect(coordsToCheck, pos1, pos2, addOneToMax)
  * @returns {EntityId[]}
  */
 getEntitiesInRect(minCoords, maxCoords)
+
+/**
+ * @param {MobId} mobId
+ * @returns {MobType}
+ */
+getMobType(mobId)
 
 /**
  * @param {EntityId} entityId
